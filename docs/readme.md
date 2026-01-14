@@ -63,6 +63,18 @@ python .\notebooks\modelobanco-test.py
 * [ ] Extrato de Estoque - Solicitado apoio Useall - sem documentação de API
 * [ ] Custo de Estoque - Solicitado apoio Useall - sem documentação de API
 
+
+
+# Testes e Estudo de relacionamento
+
+### 📊 Grafo de arvore de relacionamento
+
+![Grafo de Relacionamentos](../notebooks/tests/grafo_relacionamentos.png)
+
+### 📊 Dados relacionados com porcentagem 
+
+[Excel - Relacionamentos Sugeridos](../notebooks/tests/relacionamentos_sugeridos.xlsx)
+
 # Rascunhos da API
 
 ### Url Padrão:
