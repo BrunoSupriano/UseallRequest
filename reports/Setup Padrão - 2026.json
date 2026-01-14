@@ -1,0 +1,74 @@
+{
+  "name": "Setup - White Clean Executive (Valid)",
+  "dataColors": [
+    "#007B5E",
+    "#009E7A",
+    "#00B894",
+    "#5FB3A2",
+    "#264653",
+    "#F4A261",
+    "#E76F51",
+    "#CED4DA"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#1C1C1C",
+  "tableAccent": "#007B5E",
+  "good": "#00B894",
+  "neutral": "#ADB5BD",
+  "bad": "#E76F51",
+  "textClasses": {
+    "label": {
+      "fontSize": 10,
+      "color": "#1C1C1C"
+    },
+    "callout": {
+      "fontSize": 36,
+      "color": "#007B5E"
+    },
+    "title": {
+      "fontSize": 12,
+      "color": "#1C1C1C"
+    },
+    "header": {
+      "fontSize": 11,
+      "color": "#264653"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "color": {
+              "solid": {
+                "color": "#E5E5E5"
+              }
+            },
+            "show": false,
+            "radius": 6
+          }
+        ],
+        "title": [
+          {
+            "color": {
+              "solid": {
+                "color": "#1C1C1C"
+              }
+            },
+            "fontFamily": "Segoe UI Semibold"
+          }
+        ]
+      }
+    }
+  }
+}
