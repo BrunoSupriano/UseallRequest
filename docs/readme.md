@@ -20,11 +20,14 @@
 
 - A camada gold é a que contém os dados finais prontos para análise e visualização no Power BI.
 
-## 🐘 Postgres
+## 🐘 Postgres (Docker 🐋)
+
+- ⚠️ Este comando apaga e reinicia o container se existir.
+- ⚠️ Execute a partir da Raiz do sistema ou remova o caminho relativo "docker/".
 
 ```bash
-docker-compose down -v
-docker-compose up -d
+docker-compose -f docker/docker-compose.yml down -v
+docker-compose -f docker/docker-compose.yml up -d
 ```
 ## 🐍 Python
 
