@@ -1,0 +1,6 @@
+pandas==2.2.3
+requests==2.32.5
+psycopg2-binary==2.9.11
+SQLAlchemy==2.0.45
+networkx==3.6.1
+matplotlib==3.10.6
