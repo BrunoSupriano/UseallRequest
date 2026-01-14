@@ -1,16 +1,16 @@
-# Extração de dados da Useall
+# 📶 Extração de dados da Useall
 
 - Executavel python responsavel por extrair dados da api da useall, inserir em um banco postgres passando pela camada staging, silver e gold sendo gold a camada com dados finais e colunas adicionais implementadas
 
-# Stack Utilizada
+# 👨🏽‍💻 Stack Utilizada
 
-- 🐍 **[Python](https://www.python.org/)** – Extração, transformação e carga de dados (ETL)  
+- 🐍 **[Python](https://www.python.org/downloads/release/python-3132/)** – Extração, transformação e carga de dados (ETL)  
 - 🎲 **[Pandas](https://pandas.pydata.org/)** – Manipulação, limpeza e transformação de DataFrames  
 - 🐘 **[PostgreSQL](https://www.postgresql.org/)** – Armazenamento estruturado em camadas (staging, silver, gold)  
 - 📊 **[Power BI (Desktop)](https://powerbi.microsoft.com/desktop/)** – Visualização e análise de dados  
 
 
-## Como Executar o projeto
+## 🚀 Como Executar o projeto
 
 ### ⚠️ Dicas
 
@@ -20,13 +20,13 @@
 
 - A camada gold é a que contém os dados finais prontos para análise e visualização no Power BI.
 
-### 🐘 Postgres
+## 🐘 Postgres
 
 ```bash
 docker-compose down -v
 docker-compose up -d
 ```
-### 🐍 Python
+## 🐍 Python
 
 #### 📚 Bibliotecas
 
@@ -39,7 +39,7 @@ pip install -r .\notebooks\requirements.txt
 python .\notebooks\modelobanco-test.py
 ```
 
-## API USEAL STATUS DE EXTRAÇÃO
+## 📶 API USEAL STATUS DE EXTRAÇÃO
 
 *-* Bases Simples
 
@@ -58,11 +58,10 @@ python .\notebooks\modelobanco-test.py
 * [X] Saldo de Estoque - 132574 linhas
 * [X] Atendimento de Requisições - 519077 linhas
 
-*-* Bases Pendentes
+*-* ⚠️ Bases Pendentes ⚠️
 
 * [ ] Extrato de Estoque - Solicitado apoio Useall - sem documentação de API
 * [ ] Custo de Estoque - Solicitado apoio Useall - sem documentação de API
-
 
 
 # Testes e Estudo de relacionamento
