@@ -9,8 +9,7 @@
 - 🐘 **[PostgreSQL](https://www.postgresql.org/)** – Armazenamento estruturado em camadas (staging, silver, gold)  
 - 📊 **[Power BI (Desktop)](https://powerbi.microsoft.com/desktop/)** – Visualização e análise de dados  
 
-
-## 🚀 Como Executar o projeto
+# 🚀 Como Executar o projeto
 
 ### ⚠️ Dicas
 
@@ -19,6 +18,21 @@
 - Confirme as variáveis de ambiente do banco (usuário, senha, host, porta) antes de rodar o script Python.
 
 - A camada gold é a que contém os dados finais prontos para análise e visualização no Power BI.
+
+### 🛠️ .env (API-Key e Config Banco)
+
+> **-** Caso seja um contribuidor do Projeto:
+
+- Utilize o arquivo ".env.example"(não renomeie) para criar um **novo arquivo** chamado ".env" para não correr o risco de commitar a chave de API.
+
+- Substitua o "USEALL_TOKEN=seu_token_aqui" do arquivo .env com a sua chave de API.
+
+> **-** Caso seja apenas um visualizador:
+
+- Renomeie o arquivo ".env.example" para ".env"
+
+- Substitua o "USEALL_TOKEN=seu_token_aqui" do arquivo .env com a sua chave de API.
+
 
 ## 🐘 Postgres (Docker 🐋)
 
