@@ -43,6 +43,14 @@
 docker-compose -f docker/docker-compose.yml down -v
 docker-compose -f docker/docker-compose.yml up -d
 ```
+
+### PgAdmin Web (Docker 🐋)
+
+- PgAdmin tambem foi instanciado em docker, para visualização dos dados utilize o navegador no endereço instanciado no seu docker geralmente em: 
+
+**[http://localhost:8080/](http://localhost:8080/)**
+
+
 ## 🐍 Python
 
 #### 📚 Bibliotecas
