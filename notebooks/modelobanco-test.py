@@ -332,6 +332,48 @@ carregar_tarefa_complexa(tarefa_requisicoes)
 carregar_tarefa_complexa(tarefa_atendimento)
 
 # %% [markdown]
+# ### Api Custos - Particularidade de loop
+
+# %%
+import subprocess
+import sys
+import time
+from datetime import datetime
+
+process = subprocess.Popen(
+    [sys.executable, "apicustos.py"],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    text=True
+)
+
+print("[INFO] API de custos iniciada")
+
+while True:
+    retcode = process.poll()
+
+    now = datetime.now().strftime("%H:%M:%S")
+    print(f"[{now}] Processando API de custos...")
+
+    if retcode is not None:
+        print("[INFO] API de custos finalizada")
+        break
+
+    time.sleep(15)  # intervalo do log (ajuste se quiser)
+
+# Captura saída final
+stdout, stderr = process.communicate()
+
+if stdout:
+    print("\n[STDOUT]")
+    print(stdout)
+
+if stderr:
+    print("\n[STDERR]")
+    print(stderr)
+
+
+# %% [markdown]
 # ### Verificando Tipos
 
 # %%
@@ -490,11 +532,57 @@ log("PROCESSO FINALIZADO")
 # ## Silver definindo tipos automaticamente
 
 # %%
+import json
+from pathlib import Path
+
+SCHEMA_FILE = Path("schema_silver.json")
+
 SCHEMA = "useall"
 SAMPLE_LIMIT = 50000
 
 import pandas as pd
 import re
+
+
+def load_or_create_schema(engine, schema, staging_tables):
+    # CASO 1 — schema já existe
+    if SCHEMA_FILE.exists():
+        log("[SCHEMA] Usando schema_silver.json existente")
+        with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    # CASO 2 — primeira execução → inferir
+    log("[SCHEMA] schema_silver.json não encontrado. Inferindo tipos...")
+
+    schema_silver = {}
+
+    for staging_table in staging_tables:
+        silver_table = silver_table_name(staging_table)
+        log(f"Profiling {schema}.{staging_table} -> {schema}.{silver_table}")
+
+        df_sample = pd.read_sql(
+            f'SELECT * FROM {schema}."{staging_table}" LIMIT {SAMPLE_LIMIT}',
+            engine
+        )
+
+        schema_silver[silver_table] = {
+            "staging_table": staging_table,
+            "columns": {
+                col.lower(): {
+                    **infer_column_type_final(df_sample[col]),
+                    "source_col": col
+                }
+                for col in df_sample.columns
+            }
+        }
+
+    # Salva schema congelado
+    with open(SCHEMA_FILE, "w", encoding="utf-8") as f:
+        json.dump(schema_silver, f, indent=2, ensure_ascii=False)
+
+    log("[SCHEMA] schema_silver.json criado e congelado")
+    return schema_silver
+
 
 # Detecta formato de data
 def is_date_series(s: pd.Series):
@@ -556,30 +644,12 @@ with engine.connect() as conn:
 def silver_table_name(staging_table: str) -> str:
     return staging_table.replace("staging_", "silver_")
 
-# Monta dicionário de metadata
-schema_silver = {}
+schema_silver = load_or_create_schema(
+    engine=engine,
+    schema=SCHEMA,
+    staging_tables=staging_tables
+)
 
-for staging_table in staging_tables:
-    if not staging_table.startswith("staging_"):
-        continue
-    silver_table = silver_table_name(staging_table)
-    log(f"Profiling {SCHEMA}.{staging_table} -> {SCHEMA}.{silver_table}")
-
-    df_sample = pd.read_sql(
-    f'SELECT * FROM {SCHEMA}."{staging_table}" LIMIT {SAMPLE_LIMIT}',
-    engine
-    )
-
-    schema_silver[silver_table] = {
-        "staging_table": staging_table,
-        "columns": {
-            col.lower(): {
-                **infer_column_type_final(df_sample[col]),
-                "source_col": col  # nome REAL na staging
-            }
-            for col in df_sample.columns
-        }
-    }
 
 # Cria cast SQL
 def generate_cast_sql(col_dest, meta):
@@ -599,11 +669,20 @@ def generate_cast_sql(col_dest, meta):
 
     if meta["type"] == "timestamp":
         fmt = meta.get("format")
-        if fmt:
+
+        pg_fmt = {
+            "%Y-%m-%d": "YYYY-MM-DD",
+            "%Y-%m-%d %H:%M:%S": "YYYY-MM-DD HH24:MI:SS",
+            "%Y-%m-%dT%H:%M:%S": "YYYY-MM-DD\"T\"HH24:MI:SS",
+            "%d/%m/%Y": "DD/MM/YYYY",
+            "%d/%m/%Y %H:%M:%S": "DD/MM/YYYY HH24:MI:SS",
+        }.get(fmt)
+
+        if pg_fmt:
             return f"""
             CASE
                 WHEN {col_txt} = '' THEN NULL
-                ELSE {col_txt}::{ 'timestamp' if 'H' in fmt else 'date' }
+                ELSE to_timestamp({col_txt}, '{pg_fmt}')
             END AS "{col_dest}"
             """
         else:
@@ -613,6 +692,7 @@ def generate_cast_sql(col_dest, meta):
                 ELSE {col_sql}::timestamp
             END AS "{col_dest}"
             """
+
 
     if meta["type"] in ("bigint","numeric(18,4)"):
         return f"""
@@ -777,8 +857,9 @@ CREATE TABLE IF NOT EXISTS useall.dim_calendario (
     mes INT,
     dia INT,
 
-    mes_ano TEXT,
-    mes_ano_ordem INT,
+    ano_mes TEXT,
+    ano_mes_atual TEXT,
+    ano_mes_ordem INT,
 
     nome_mes TEXT,
     nome_mes_abrev TEXT,
@@ -800,8 +881,8 @@ sql_create_indices = text("""
 CREATE INDEX IF NOT EXISTS idx_dim_calendario_data
     ON useall.dim_calendario (data);
 
-CREATE INDEX IF NOT EXISTS idx_dim_calendario_mes_ano_ordem
-    ON useall.dim_calendario (mes_ano_ordem);
+CREATE INDEX IF NOT EXISTS idx_dim_calendario_ano_mes_ordem
+    ON useall.dim_calendario (ano_mes_ordem);
 """)
 
 sql_atualiza_calendario = text("""
@@ -813,8 +894,16 @@ SELECT DISTINCT
     EXTRACT(MONTH FROM d)::int AS mes,
     EXTRACT(DAY FROM d)::int AS dia,
 
-    TO_CHAR(d, 'MM/YYYY') AS mes_ano,
-    (EXTRACT(YEAR FROM d) * 100 + EXTRACT(MONTH FROM d))::int AS mes_ano_ordem,
+    TO_CHAR(d, 'YYYY/MM') AS ano_mes,
+
+    CASE
+        WHEN EXTRACT(YEAR FROM d) = EXTRACT(YEAR FROM CURRENT_DATE)
+        AND EXTRACT(MONTH FROM d) = EXTRACT(MONTH FROM CURRENT_DATE)
+        THEN 'Mês Atual'
+        ELSE TO_CHAR(d, 'YYYY/MM')
+    END AS ano_mes_atual,
+
+    (EXTRACT(YEAR FROM d) * 100 + EXTRACT(MONTH FROM d))::int AS ano_mes_ordem,
 
     CASE EXTRACT(MONTH FROM d)
         WHEN 1 THEN 'Janeiro'
