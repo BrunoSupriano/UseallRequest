@@ -28,6 +28,7 @@ HEADERS = {
 }
 
 
+
 # %%
 # LOGGING
 # =========================
@@ -35,6 +36,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s"
 )
+
 
 
 # %%
@@ -45,6 +47,7 @@ RAW_FINAL = "data/staging_custos_raw.json"
 
 os.makedirs(RAW_DIR, exist_ok=True)
 os.makedirs("data", exist_ok=True)
+
 
 
 # %%
@@ -58,6 +61,7 @@ grupos = {
     "ctfm": [342,343],
     "servicos": [339,340,381,389]
 }
+
 
 
 # %%
@@ -75,6 +79,7 @@ for key, value in env_vars.items():
         logging.info(f"{key} carregada: {value}")
     else:
         logging.error(f"{key} não carregada ou vazia")
+
 
 # %%
 # EXTRAÇÃO POR GRUPO
@@ -136,7 +141,6 @@ for nome, ids in grupos.items():
     logging.info(f"Aguardando {ESPERA}s\n")
     time.sleep(ESPERA)
 
-
 # %%
 # CONSOLIDA STAGING_CUSTOS_RAW
 # =========================
@@ -147,11 +151,15 @@ logging.info(
     f"Arquivo consolidado criado: {RAW_FINAL} ({len(todos_registros)} registros)"
 )
 
-
 # %%
 # CARGA NO POSTGRES
 # =========================
 engine = create_engine(DB_URL)
+
+from sqlalchemy import text
+
+with engine.begin() as conn:
+    conn.execute(text("CREATE SCHEMA IF NOT EXISTS useall"))
 
 df = pd.DataFrame(todos_registros)
 
@@ -166,6 +174,9 @@ df.to_sql(
 )
 
 logging.info("Carga no PostgreSQL finalizada")
+
+
+
 
 
 

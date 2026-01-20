@@ -1,8 +1,8 @@
 # %% [markdown]
-# # Extração de API Useall
+#  # Extração de API Useall
 
 # %% [markdown]
-# ## Tools and functions
+#  ## Tools and functions
 
 # %%
 import os
@@ -135,11 +135,12 @@ pipeline_start = time.time()
 print(f"--- Pipeline iniciada em {time.strftime('%d/%m/%Y %H:%M:%S')} ---")
 
 
-# %% [markdown]
-# ## Variaveis de filtros
 
 # %% [markdown]
-# ### Simples
+#  ## Variaveis de filtros
+
+# %% [markdown]
+#  ### Simples
 
 # %%
 params_fixos = {"pagina": 1, "qtderegistros": 1}
@@ -225,12 +226,22 @@ tarefas_simples = [
             filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027")
         ],
         "extra_params": params_fixos
-    }
+    },
+    {
+        "nome": "dfuseallalmoxarifados",
+        "id": "m2_estoque_almoxarifados",
+        "filtros": [
+            filtro_simples("DATAHORAALTINI", "01/01/1900"),
+            filtro_simples("DATAHORAALTFIM", "01/01/2500")
+        ],
+        "extra_params": params_fixos
+    },
 ]
 
 
+
 # %% [markdown]
-# ### COMPLEXAS
+#  ### COMPLEXAS
 
 # %%
 
@@ -313,76 +324,63 @@ tarefa_atendimento = {
 
 
 
-# %% [markdown]
-# ## Criando DataFrames
 
 # %% [markdown]
-# ### Usando funções
+#  ## Criando DataFrames
+
+# %% [markdown]
+#  ### Usando funções
 
 # %%
 carregar_dfs_globais(tarefas_simples)
 
+
 # %%
 carregar_tarefa_complexa(tarefa_estoque)
 
-# %%
-carregar_tarefa_complexa(tarefa_requisicoes)
 
 # %%
 carregar_tarefa_complexa(tarefa_atendimento)
 
+
 # %% [markdown]
-# ### Api Custos - Particularidade de loop
+#  ### Api Custos - Particularidade de loop
 
 # %%
 import subprocess
 import sys
-import time
 from datetime import datetime
 
 process = subprocess.Popen(
     [sys.executable, "apicustos.py"],
     stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    text=True
+    stderr=subprocess.STDOUT,
+    text=True,
+    bufsize=1
 )
 
-print("[INFO] API de custos iniciada")
+print("[INFO] API de custos iniciada\n")
 
-while True:
-    retcode = process.poll()
-
+for line in process.stdout:
     now = datetime.now().strftime("%H:%M:%S")
-    print(f"[{now}] Processando API de custos...")
+    print(f"[{now}] {line}", end="")
 
-    if retcode is not None:
-        print("[INFO] API de custos finalizada")
-        break
+process.wait()
 
-    time.sleep(15)  # intervalo do log (ajuste se quiser)
-
-# Captura saída final
-stdout, stderr = process.communicate()
-
-if stdout:
-    print("\n[STDOUT]")
-    print(stdout)
-
-if stderr:
-    print("\n[STDERR]")
-    print(stderr)
+print("\n[INFO] API de custos finalizada")
 
 
 # %% [markdown]
-# ### Verificando Tipos
+#  ### Verificando Tipos
 
 # %%
 # --- 3. Verificação de Tipos ---
 print(f"[{time.strftime('%H:%M:%S')}] --- INICIANDO VERIFICAÇÃO DE TIPOS ---")
 verificar_tipos_dados()
 
+
 # %% [markdown]
-# ## Configurações Banco de Dados 
+#  ## Configurações Banco de Dados
 
 # %%
 # Carregando .env
@@ -416,8 +414,9 @@ with engine.connect() as conn:
     conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA}"))
     conn.commit()
 
+
 # %% [markdown]
-# ## Staging - Bronze - Dados Brutos tipos indefinidos
+#  ## Staging - Bronze - Dados Brutos tipos indefinidos
 
 # %%
 ordem_staging = [
@@ -439,6 +438,7 @@ ordem_staging = [
     "dfuseallexpedição",
     "dfuseallclientesfornecedore",
 ]
+
 
 
 # %%
@@ -528,8 +528,9 @@ else:
 log("PROCESSO FINALIZADO")
 
 
+
 # %% [markdown]
-# ## Silver definindo tipos automaticamente
+#  ## Silver definindo tipos automaticamente
 
 # %%
 import json
@@ -748,8 +749,9 @@ log("--------------------------------------------------")
 log("PROCESSO FINALIZADO")
 
 
+
 # %% [markdown]
-# ## Gold - Adicionando novas colunas e agregando valor
+#  ## Gold - Adicionando novas colunas e agregando valor
 
 # %%
 from sqlalchemy import create_engine, text
@@ -842,8 +844,9 @@ with engine.begin() as conn:
     conn.execute(text(sql))
 
 
+
 # %% [markdown]
-# ## Dim_Calendario
+#  ## Dim_Calendario
 
 # %%
 from sqlalchemy import create_engine, text
@@ -976,6 +979,9 @@ with engine.begin() as conn:
     conn.execute(sql_create_dim_calendario)
     conn.execute(sql_create_indices)
     conn.execute(sql_atualiza_calendario)
+
+
+
 
 
 
