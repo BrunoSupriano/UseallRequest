@@ -1,4 +1,108 @@
 {
+  "silver_custos": {
+    "staging_table": "staging_custos",
+    "columns": {
+      "idfilial": {
+        "type": "bigint",
+        "source_col": "IDFILIAL"
+      },
+      "ultimocusto": {
+        "type": "numeric(18,4)",
+        "source_col": "ULTIMOCUSTO"
+      },
+      "customedio": {
+        "type": "numeric(18,4)",
+        "source_col": "CUSTOMEDIO"
+      },
+      "datacustomedio": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATACUSTOMEDIO"
+      },
+      "datacusto": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATACUSTO"
+      },
+      "codigocontactb": {
+        "type": "bigint",
+        "source_col": "CODIGOCONTACTB"
+      },
+      "codigoconta": {
+        "type": "bigint",
+        "source_col": "CODIGOCONTA"
+      },
+      "descricaocontactb": {
+        "type": "text",
+        "source_col": "DESCRICAOCONTACTB"
+      },
+      "dataalmox": {
+        "type": "timestamp",
+        "format": "%d/%m/%Y",
+        "source_col": "DATAALMOX"
+      },
+      "codigogrupoitem": {
+        "type": "text",
+        "source_col": "CODIGOGRUPOITEM"
+      },
+      "descricaogrupoitem": {
+        "type": "text",
+        "source_col": "DESCRICAOGRUPOITEM"
+      },
+      "codigoitem": {
+        "type": "bigint",
+        "source_col": "CODIGOITEM"
+      },
+      "descricao": {
+        "type": "text",
+        "source_col": "DESCRICAO"
+      },
+      "codigoalmox": {
+        "type": "bigint",
+        "source_col": "CODIGOALMOX"
+      },
+      "customedioalmox": {
+        "type": "numeric(18,4)",
+        "source_col": "CUSTOMEDIOALMOX"
+      },
+      "identificacao": {
+        "type": "text",
+        "source_col": "IDENTIFICACAO"
+      },
+      "sigla": {
+        "type": "text",
+        "source_col": "SIGLA"
+      },
+      "codigotipoitem": {
+        "type": "bigint",
+        "source_col": "CODIGOTIPOITEM"
+      },
+      "codigomarcaitem": {
+        "type": "text",
+        "source_col": "CODIGOMARCAITEM"
+      },
+      "class_grupoitem": {
+        "type": "text",
+        "source_col": "CLASS_GRUPOITEM"
+      },
+      "saldo": {
+        "type": "numeric(18,4)",
+        "source_col": "SALDO"
+      },
+      "idalmoxtenant": {
+        "type": "numeric(18,4)",
+        "source_col": "IDALMOXTENANT"
+      },
+      "codigofornecedor": {
+        "type": "text",
+        "source_col": "CODIGOFORNECEDOR"
+      },
+      "_grupo_origem": {
+        "type": "text",
+        "source_col": "_grupo_origem"
+      }
+    }
+  },
   "silver_atendimentodereq": {
     "staging_table": "staging_atendimentodereq",
     "columns": {
@@ -64,11 +168,11 @@
         "source_col": "IDREQMAT"
       },
       "numeroos": {
-        "type": "text",
+        "type": "bigint",
         "source_col": "NUMEROOS"
       },
       "numeroprocserv": {
-        "type": "numeric(18,4)",
+        "type": "text",
         "source_col": "NUMEROPROCSERV"
       },
       "numeroop": {
@@ -165,7 +269,7 @@
         "source_col": "ESTOQUEFECHADO"
       },
       "customedio": {
-        "type": "numeric(18,4)",
+        "type": "text",
         "source_col": "CUSTOMEDIO"
       },
       "quantlote": {
@@ -183,6 +287,122 @@
       "idreqmattenant": {
         "type": "numeric(18,4)",
         "source_col": "IDREQMATTENANT"
+      }
+    }
+  },
+  "silver_itens": {
+    "staging_table": "staging_itens",
+    "columns": {
+      "iditem": {
+        "type": "bigint",
+        "source_col": "IDITEM"
+      },
+      "datahoraalteracao": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATAHORAALTERACAO"
+      },
+      "identificacao": {
+        "type": "text",
+        "source_col": "IDENTIFICACAO"
+      },
+      "descricao": {
+        "type": "text",
+        "source_col": "DESCRICAO"
+      },
+      "idclassfiscal": {
+        "type": "numeric(18,4)",
+        "source_col": "IDCLASSFISCAL"
+      },
+      "idun": {
+        "type": "numeric(18,4)",
+        "source_col": "IDUN"
+      },
+      "idunvenda": {
+        "type": "numeric(18,4)",
+        "source_col": "IDUNVENDA"
+      },
+      "quantembvenda": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTEMBVENDA"
+      },
+      "pesobruto": {
+        "type": "numeric(18,4)",
+        "source_col": "PESOBRUTO"
+      },
+      "pesoliq": {
+        "type": "numeric(18,4)",
+        "source_col": "PESOLIQ"
+      },
+      "obs": {
+        "type": "text",
+        "source_col": "OBS"
+      },
+      "ativo": {
+        "type": "boolean",
+        "source_col": "ATIVO"
+      },
+      "complemento": {
+        "type": "text",
+        "source_col": "COMPLEMENTO"
+      },
+      "idgrupoitem": {
+        "type": "numeric(18,4)",
+        "source_col": "IDGRUPOITEM"
+      },
+      "idtipoitem": {
+        "type": "bigint",
+        "source_col": "IDTIPOITEM"
+      },
+      "quantminvenda": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTMINVENDA"
+      },
+      "codbarra": {
+        "type": "bigint",
+        "source_col": "CODBARRA"
+      },
+      "liberado": {
+        "type": "text",
+        "source_col": "LIBERADO"
+      },
+      "formatocodbar": {
+        "type": "numeric(18,4)",
+        "source_col": "FORMATOCODBAR"
+      }
+    }
+  },
+  "silver_unidades": {
+    "staging_table": "staging_unidades",
+    "columns": {
+      "idun": {
+        "type": "bigint",
+        "source_col": "IDUN"
+      },
+      "idunidadetenant": {
+        "type": "bigint",
+        "source_col": "IDUNIDADETENANT"
+      },
+      "descricao": {
+        "type": "text",
+        "source_col": "DESCRICAO"
+      },
+      "sigla": {
+        "type": "text",
+        "source_col": "SIGLA"
+      },
+      "siglafci": {
+        "type": "text",
+        "source_col": "SIGLAFCI"
+      },
+      "datahoraalteracao": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATAHORAALTERACAO"
+      },
+      "status": {
+        "type": "text",
+        "source_col": "STATUS"
       }
     }
   },
@@ -226,6 +446,639 @@
       "sigla": {
         "type": "text",
         "source_col": "SIGLA"
+      }
+    }
+  },
+  "silver_requisicoes": {
+    "staging_table": "staging_requisicoes",
+    "columns": {
+      "desc_filial": {
+        "type": "text",
+        "source_col": "DESC_FILIAL"
+      },
+      "endereco_filial": {
+        "type": "text",
+        "source_col": "ENDERECO_FILIAL"
+      },
+      "cep_filial": {
+        "type": "text",
+        "source_col": "CEP_FILIAL"
+      },
+      "fax_filial": {
+        "type": "text",
+        "source_col": "FAX_FILIAL"
+      },
+      "fone_filial": {
+        "type": "text",
+        "source_col": "FONE_FILIAL"
+      },
+      "cpf_cnpj_filial": {
+        "type": "text",
+        "source_col": "CPF_CNPJ_FILIAL"
+      },
+      "insc_estadual_filial": {
+        "type": "text",
+        "source_col": "INSC_ESTADUAL_FILIAL"
+      },
+      "cidade_filial": {
+        "type": "text",
+        "source_col": "CIDADE_FILIAL"
+      },
+      "uf_filial": {
+        "type": "text",
+        "source_col": "UF_FILIAL"
+      },
+      "idempresa": {
+        "type": "bigint",
+        "source_col": "IDEMPRESA"
+      },
+      "idfilial": {
+        "type": "bigint",
+        "source_col": "IDFILIAL"
+      },
+      "idreqmat": {
+        "type": "bigint",
+        "source_col": "IDREQMAT"
+      },
+      "idreqmattenant": {
+        "type": "bigint",
+        "source_col": "IDREQMATTENANT"
+      },
+      "data": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATA"
+      },
+      "dataprevatend": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATAPREVATEND"
+      },
+      "idalmox": {
+        "type": "bigint",
+        "source_col": "IDALMOX"
+      },
+      "status": {
+        "type": "bigint",
+        "source_col": "STATUS"
+      },
+      "tipo": {
+        "type": "boolean",
+        "source_col": "TIPO"
+      },
+      "desc_almox": {
+        "type": "text",
+        "source_col": "DESC_ALMOX"
+      },
+      "sigla_almox": {
+        "type": "text",
+        "source_col": "SIGLA_ALMOX"
+      },
+      "idtenant": {
+        "type": "bigint",
+        "source_col": "IDTENANT"
+      },
+      "idreqmatitem": {
+        "type": "bigint",
+        "source_col": "IDREQMATITEM"
+      },
+      "quant": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANT"
+      },
+      "quantcancel": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTCANCEL"
+      },
+      "quantatend": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTATEND"
+      },
+      "quantsubst": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTSUBST"
+      },
+      "saldo": {
+        "type": "numeric(18,4)",
+        "source_col": "SALDO"
+      },
+      "idrequisitante": {
+        "type": "numeric(18,4)",
+        "source_col": "IDREQUISITANTE"
+      },
+      "requisitante": {
+        "type": "text",
+        "source_col": "REQUISITANTE"
+      },
+      "sigla_un": {
+        "type": "text",
+        "source_col": "SIGLA_UN"
+      },
+      "iditem": {
+        "type": "bigint",
+        "source_col": "IDITEM"
+      },
+      "identificacao": {
+        "type": "text",
+        "source_col": "IDENTIFICACAO"
+      },
+      "descricao": {
+        "type": "text",
+        "source_col": "DESCRICAO"
+      },
+      "idgrupoitem": {
+        "type": "bigint",
+        "source_col": "IDGRUPOITEM"
+      },
+      "idcontacdc": {
+        "type": "numeric(18,4)",
+        "source_col": "IDCONTACDC"
+      },
+      "classificacaogrupoitem": {
+        "type": "bigint",
+        "source_col": "CLASSIFICACAOGRUPOITEM"
+      },
+      "desc_grupo": {
+        "type": "text",
+        "source_col": "DESC_GRUPO"
+      },
+      "descricaocontacdc": {
+        "type": "text",
+        "source_col": "DESCRICAOCONTACDC"
+      },
+      "classificacaocontacdc": {
+        "type": "text",
+        "source_col": "CLASSIFICACAOCONTACDC"
+      }
+    }
+  },
+  "silver_estoque": {
+    "staging_table": "staging_estoque",
+    "columns": {
+      "idsecao": {
+        "type": "numeric(18,4)",
+        "source_col": "IDSECAO"
+      },
+      "idfilial": {
+        "type": "bigint",
+        "source_col": "IDFILIAL"
+      },
+      "idempresa": {
+        "type": "bigint",
+        "source_col": "IDEMPRESA"
+      },
+      "idalmox": {
+        "type": "bigint",
+        "source_col": "IDALMOX"
+      },
+      "tipoalmox": {
+        "type": "bigint",
+        "source_col": "TIPOALMOX"
+      },
+      "desc_almox": {
+        "type": "text",
+        "source_col": "DESC_ALMOX"
+      },
+      "idun": {
+        "type": "bigint",
+        "source_col": "IDUN"
+      },
+      "iditem": {
+        "type": "bigint",
+        "source_col": "IDITEM"
+      },
+      "identificacao": {
+        "type": "text",
+        "source_col": "IDENTIFICACAO"
+      },
+      "desc_item": {
+        "type": "text",
+        "source_col": "DESC_ITEM"
+      },
+      "idmarca": {
+        "type": "numeric(18,4)",
+        "source_col": "IDMARCA"
+      },
+      "idtipoitem": {
+        "type": "bigint",
+        "source_col": "IDTIPOITEM"
+      },
+      "idgrupoitem": {
+        "type": "bigint",
+        "source_col": "IDGRUPOITEM"
+      },
+      "classificacao": {
+        "type": "bigint",
+        "source_col": "CLASSIFICACAO"
+      },
+      "desc_grupo": {
+        "type": "text",
+        "source_col": "DESC_GRUPO"
+      },
+      "desc_marca": {
+        "type": "text",
+        "source_col": "DESC_MARCA"
+      },
+      "saldofisico": {
+        "type": "numeric(18,4)",
+        "source_col": "SALDOFISICO"
+      },
+      "quantreservada": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTRESERVADA"
+      },
+      "saldodisponivel": {
+        "type": "numeric(18,4)",
+        "source_col": "SALDODISPONIVEL"
+      },
+      "estoquemin": {
+        "type": "numeric(18,4)",
+        "source_col": "ESTOQUEMIN"
+      },
+      "estoquemax": {
+        "type": "numeric(18,4)",
+        "source_col": "ESTOQUEMAX"
+      },
+      "desc_tipoitem": {
+        "type": "text",
+        "source_col": "DESC_TIPOITEM"
+      },
+      "sigla": {
+        "type": "text",
+        "source_col": "SIGLA"
+      },
+      "posicao": {
+        "type": "numeric(18,4)",
+        "source_col": "POSICAO"
+      }
+    }
+  },
+  "silver_solcompra": {
+    "staging_table": "staging_solcompra",
+    "columns": {
+      "idsoliccompra": {
+        "type": "bigint",
+        "source_col": "IDSOLICCOMPRA"
+      },
+      "idempresa": {
+        "type": "bigint",
+        "source_col": "IDEMPRESA"
+      },
+      "idfilial": {
+        "type": "bigint",
+        "source_col": "IDFILIAL"
+      },
+      "numero": {
+        "type": "bigint",
+        "source_col": "NUMERO"
+      },
+      "idsolicitante": {
+        "type": "bigint",
+        "source_col": "IDSOLICITANTE"
+      },
+      "obs": {
+        "type": "text",
+        "source_col": "OBS"
+      },
+      "status": {
+        "type": "text",
+        "source_col": "STATUS"
+      },
+      "primeiradatanecessidade": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "PRIMEIRADATANECESSIDADE"
+      },
+      "finalidade": {
+        "type": "text",
+        "source_col": "FINALIDADE"
+      },
+      "idsoliccompraitem": {
+        "type": "bigint",
+        "source_col": "IDSOLICCOMPRAITEM"
+      },
+      "identificacao": {
+        "type": "bigint",
+        "source_col": "IDENTIFICACAO"
+      },
+      "idun": {
+        "type": "bigint",
+        "source_col": "IDUN"
+      },
+      "quant": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANT"
+      },
+      "datanecessidade": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATANECESSIDADE"
+      },
+      "complemento": {
+        "type": "text",
+        "source_col": "COMPLEMENTO"
+      },
+      "saldo": {
+        "type": "numeric(18,4)",
+        "source_col": "SALDO"
+      },
+      "urgente": {
+        "type": "boolean",
+        "source_col": "URGENTE"
+      },
+      "urgente_desc": {
+        "type": "text",
+        "source_col": "URGENTE_DESC"
+      },
+      "idcontacdc": {
+        "type": "numeric(18,4)",
+        "source_col": "IDCONTACDC"
+      },
+      "classificacao": {
+        "type": "text",
+        "source_col": "CLASSIFICACAO"
+      },
+      "descricao": {
+        "type": "text",
+        "source_col": "DESCRICAO"
+      }
+    }
+  },
+  "silver_filiais": {
+    "staging_table": "staging_filiais",
+    "columns": {
+      "idfilial": {
+        "type": "bigint",
+        "source_col": "IDFILIAL"
+      },
+      "datahoraalt": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATAHORAALT"
+      },
+      "idempresa": {
+        "type": "bigint",
+        "source_col": "IDEMPRESA"
+      },
+      "matriz": {
+        "type": "boolean",
+        "source_col": "MATRIZ"
+      },
+      "apelido": {
+        "type": "text",
+        "source_col": "APELIDO"
+      }
+    }
+  },
+  "silver_empresas": {
+    "staging_table": "staging_empresas",
+    "columns": {
+      "idempresa": {
+        "type": "bigint",
+        "source_col": "IDEMPRESA"
+      },
+      "datahoraalt": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATAHORAALT"
+      },
+      "cnpjcpf": {
+        "type": "bigint",
+        "source_col": "CNPJCPF"
+      },
+      "razaosocial": {
+        "type": "text",
+        "source_col": "RAZAOSOCIAL"
+      },
+      "nomefantasia": {
+        "type": "text",
+        "source_col": "NOMEFANTASIA"
+      },
+      "ie": {
+        "type": "text",
+        "source_col": "IE"
+      },
+      "im": {
+        "type": "text",
+        "source_col": "IM"
+      },
+      "endereco": {
+        "type": "text",
+        "source_col": "ENDERECO"
+      },
+      "bairro": {
+        "type": "text",
+        "source_col": "BAIRRO"
+      },
+      "cep": {
+        "type": "bigint",
+        "source_col": "CEP"
+      },
+      "fone": {
+        "type": "bigint",
+        "source_col": "FONE"
+      },
+      "fax": {
+        "type": "bigint",
+        "source_col": "FAX"
+      },
+      "email": {
+        "type": "text",
+        "source_col": "EMAIL"
+      },
+      "idcidade": {
+        "type": "bigint",
+        "source_col": "IDCIDADE"
+      }
+    }
+  },
+  "silver_expedição": {
+    "staging_table": "staging_expedição",
+    "columns": {
+      "codigofat": {
+        "type": "bigint",
+        "source_col": "CODIGOFAT"
+      },
+      "datahoracad": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATAHORACAD"
+      },
+      "dataentrega": {
+        "type": "text",
+        "source_col": "DATAENTREGA"
+      },
+      "conferencia": {
+        "type": "text",
+        "source_col": "CONFERENCIA"
+      },
+      "origemconferencia": {
+        "type": "numeric(18,4)",
+        "source_col": "ORIGEMCONFERENCIA"
+      },
+      "descricaoorigemconferencia": {
+        "type": "text",
+        "source_col": "DESCRICAOORIGEMCONFERENCIA"
+      },
+      "origem": {
+        "type": "text",
+        "source_col": "ORIGEM"
+      },
+      "codigooirigem": {
+        "type": "bigint",
+        "source_col": "CODIGOOIRIGEM"
+      },
+      "numerodoc": {
+        "type": "bigint",
+        "source_col": "NUMERODOC"
+      },
+      "numeropedidocliente": {
+        "type": "text",
+        "source_col": "NUMEROPEDIDOCLIENTE"
+      },
+      "codigocliente": {
+        "type": "numeric(18,4)",
+        "source_col": "CODIGOCLIENTE"
+      },
+      "razaocliente": {
+        "type": "text",
+        "source_col": "RAZAOCLIENTE"
+      },
+      "endereco": {
+        "type": "text",
+        "source_col": "ENDERECO"
+      },
+      "cep": {
+        "type": "bigint",
+        "source_col": "CEP"
+      },
+      "cidade": {
+        "type": "text",
+        "source_col": "CIDADE"
+      },
+      "uf": {
+        "type": "text",
+        "source_col": "UF"
+      },
+      "enderecoentrega": {
+        "type": "text",
+        "source_col": "ENDERECOENTREGA"
+      },
+      "cepentrega": {
+        "type": "bigint",
+        "source_col": "CEPENTREGA"
+      },
+      "cidadeentrega": {
+        "type": "text",
+        "source_col": "CIDADEENTREGA"
+      },
+      "ufentrega": {
+        "type": "text",
+        "source_col": "UFENTREGA"
+      },
+      "codigotransp": {
+        "type": "numeric(18,4)",
+        "source_col": "CODIGOTRANSP"
+      },
+      "razaotransp": {
+        "type": "text",
+        "source_col": "RAZAOTRANSP"
+      },
+      "rawtoguid(guidlote)": {
+        "type": "text",
+        "source_col": "RAWTOGUID(GUIDLOTE)"
+      },
+      "carga": {
+        "type": "text",
+        "source_col": "CARGA"
+      },
+      "codigousuario": {
+        "type": "numeric(18,4)",
+        "source_col": "CODIGOUSUARIO"
+      },
+      "nomeusuario": {
+        "type": "text",
+        "source_col": "NOMEUSUARIO"
+      },
+      "codigogrupoempresarial": {
+        "type": "numeric(18,4)",
+        "source_col": "CODIGOGRUPOEMPRESARIAL"
+      },
+      "descricaogrupoempresarial": {
+        "type": "text",
+        "source_col": "DESCRICAOGRUPOEMPRESARIAL"
+      },
+      "numeroitempedidocliente": {
+        "type": "text",
+        "source_col": "NUMEROITEMPEDIDOCLIENTE"
+      },
+      "seq": {
+        "type": "bigint",
+        "source_col": "SEQ"
+      },
+      "identificacao": {
+        "type": "text",
+        "source_col": "IDENTIFICACAO"
+      },
+      "descricao": {
+        "type": "text",
+        "source_col": "DESCRICAO"
+      },
+      "unidade": {
+        "type": "text",
+        "source_col": "UNIDADE"
+      },
+      "quantselecionada": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTSELECIONADA"
+      },
+      "quantconferida": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTCONFERIDA"
+      },
+      "saldo": {
+        "type": "numeric(18,4)",
+        "source_col": "SALDO"
+      },
+      "ordem": {
+        "type": "boolean",
+        "source_col": "ORDEM"
+      },
+      "codigofilial": {
+        "type": "bigint",
+        "source_col": "CODIGOFILIAL"
+      },
+      "codigoempresa": {
+        "type": "bigint",
+        "source_col": "CODIGOEMPRESA"
+      },
+      "placa": {
+        "type": "text",
+        "source_col": "PLACA"
+      },
+      "ordementrega": {
+        "type": "text",
+        "source_col": "ORDEMENTREGA"
+      },
+      "dataprevcarreg": {
+        "type": "text",
+        "source_col": "DATAPREVCARREG"
+      },
+      "statusconf": {
+        "type": "bigint",
+        "source_col": "STATUSCONF"
+      },
+      "codigotransptenant": {
+        "type": "numeric(18,4)",
+        "source_col": "CODIGOTRANSPTENANT"
+      },
+      "datahorapreparacao": {
+        "type": "text",
+        "source_col": "DATAHORAPREPARACAO"
+      },
+      "idpeditem": {
+        "type": "bigint",
+        "source_col": "IDPEDITEM"
       }
     }
   },
@@ -451,852 +1304,50 @@
       }
     }
   },
-  "silver_custos": {
-    "staging_table": "staging_custos",
+  "silver_almoxarifados": {
+    "staging_table": "staging_almoxarifados",
     "columns": {
-      "idfilial": {
+      "idalmox": {
         "type": "bigint",
-        "source_col": "IDFILIAL"
+        "source_col": "IDALMOX"
       },
-      "ultimocusto": {
-        "type": "numeric(18,4)",
-        "source_col": "ULTIMOCUSTO"
-      },
-      "customedio": {
-        "type": "numeric(18,4)",
-        "source_col": "CUSTOMEDIO"
-      },
-      "datacustomedio": {
+      "datahoraalt": {
         "type": "timestamp",
         "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATACUSTOMEDIO"
-      },
-      "datacusto": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATACUSTO"
-      },
-      "codigocontactb": {
-        "type": "bigint",
-        "source_col": "CODIGOCONTACTB"
-      },
-      "codigoconta": {
-        "type": "bigint",
-        "source_col": "CODIGOCONTA"
-      },
-      "descricaocontactb": {
-        "type": "text",
-        "source_col": "DESCRICAOCONTACTB"
-      },
-      "dataalmox": {
-        "type": "timestamp",
-        "format": "%d/%m/%Y",
-        "source_col": "DATAALMOX"
-      },
-      "codigogrupoitem": {
-        "type": "numeric(18,4)",
-        "source_col": "CODIGOGRUPOITEM"
-      },
-      "descricaogrupoitem": {
-        "type": "text",
-        "source_col": "DESCRICAOGRUPOITEM"
-      },
-      "codigoitem": {
-        "type": "bigint",
-        "source_col": "CODIGOITEM"
-      },
-      "descricao": {
-        "type": "text",
-        "source_col": "DESCRICAO"
-      },
-      "codigoalmox": {
-        "type": "bigint",
-        "source_col": "CODIGOALMOX"
-      },
-      "customedioalmox": {
-        "type": "numeric(18,4)",
-        "source_col": "CUSTOMEDIOALMOX"
-      },
-      "identificacao": {
-        "type": "text",
-        "source_col": "IDENTIFICACAO"
-      },
-      "sigla": {
-        "type": "text",
-        "source_col": "SIGLA"
-      },
-      "codigotipoitem": {
-        "type": "bigint",
-        "source_col": "CODIGOTIPOITEM"
-      },
-      "codigomarcaitem": {
-        "type": "numeric(18,4)",
-        "source_col": "CODIGOMARCAITEM"
-      },
-      "class_grupoitem": {
-        "type": "bigint",
-        "source_col": "CLASS_GRUPOITEM"
-      },
-      "saldo": {
-        "type": "numeric(18,4)",
-        "source_col": "SALDO"
+        "source_col": "DATAHORAALT"
       },
       "idalmoxtenant": {
-        "type": "numeric(18,4)",
+        "type": "bigint",
         "source_col": "IDALMOXTENANT"
       },
-      "codigofornecedor": {
-        "type": "numeric(18,4)",
-        "source_col": "CODIGOFORNECEDOR"
-      },
-      "_grupo_origem": {
-        "type": "text",
-        "source_col": "_grupo_origem"
-      }
-    }
-  },
-  "silver_empresas": {
-    "staging_table": "staging_empresas",
-    "columns": {
       "idempresa": {
         "type": "bigint",
         "source_col": "IDEMPRESA"
-      },
-      "datahoraalt": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATAHORAALT"
-      },
-      "cnpjcpf": {
-        "type": "bigint",
-        "source_col": "CNPJCPF"
-      },
-      "razaosocial": {
-        "type": "text",
-        "source_col": "RAZAOSOCIAL"
-      },
-      "nomefantasia": {
-        "type": "text",
-        "source_col": "NOMEFANTASIA"
-      },
-      "ie": {
-        "type": "text",
-        "source_col": "IE"
-      },
-      "im": {
-        "type": "text",
-        "source_col": "IM"
-      },
-      "endereco": {
-        "type": "text",
-        "source_col": "ENDERECO"
-      },
-      "bairro": {
-        "type": "text",
-        "source_col": "BAIRRO"
-      },
-      "cep": {
-        "type": "bigint",
-        "source_col": "CEP"
-      },
-      "fone": {
-        "type": "bigint",
-        "source_col": "FONE"
-      },
-      "fax": {
-        "type": "bigint",
-        "source_col": "FAX"
-      },
-      "email": {
-        "type": "text",
-        "source_col": "EMAIL"
-      },
-      "idcidade": {
-        "type": "bigint",
-        "source_col": "IDCIDADE"
-      }
-    }
-  },
-  "silver_estoque": {
-    "staging_table": "staging_estoque",
-    "columns": {
-      "idsecao": {
-        "type": "numeric(18,4)",
-        "source_col": "IDSECAO"
       },
       "idfilial": {
         "type": "bigint",
         "source_col": "IDFILIAL"
       },
-      "idempresa": {
-        "type": "bigint",
-        "source_col": "IDEMPRESA"
-      },
-      "idalmox": {
-        "type": "bigint",
-        "source_col": "IDALMOX"
-      },
-      "tipoalmox": {
-        "type": "bigint",
-        "source_col": "TIPOALMOX"
-      },
-      "desc_almox": {
+      "descricao": {
         "type": "text",
-        "source_col": "DESC_ALMOX"
+        "source_col": "DESCRICAO"
       },
-      "idun": {
+      "dataimplantacao": {
+        "type": "timestamp",
+        "format": "%Y-%m-%dT%H:%M:%S",
+        "source_col": "DATAIMPLANTACAO"
+      },
+      "idcontactbestoque": {
         "type": "bigint",
-        "source_col": "IDUN"
-      },
-      "iditem": {
-        "type": "bigint",
-        "source_col": "IDITEM"
-      },
-      "identificacao": {
-        "type": "text",
-        "source_col": "IDENTIFICACAO"
-      },
-      "desc_item": {
-        "type": "text",
-        "source_col": "DESC_ITEM"
-      },
-      "idmarca": {
-        "type": "numeric(18,4)",
-        "source_col": "IDMARCA"
-      },
-      "idtipoitem": {
-        "type": "bigint",
-        "source_col": "IDTIPOITEM"
-      },
-      "idgrupoitem": {
-        "type": "bigint",
-        "source_col": "IDGRUPOITEM"
-      },
-      "classificacao": {
-        "type": "bigint",
-        "source_col": "CLASSIFICACAO"
-      },
-      "desc_grupo": {
-        "type": "text",
-        "source_col": "DESC_GRUPO"
-      },
-      "desc_marca": {
-        "type": "text",
-        "source_col": "DESC_MARCA"
-      },
-      "saldofisico": {
-        "type": "numeric(18,4)",
-        "source_col": "SALDOFISICO"
-      },
-      "quantreservada": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANTRESERVADA"
-      },
-      "saldodisponivel": {
-        "type": "numeric(18,4)",
-        "source_col": "SALDODISPONIVEL"
-      },
-      "estoquemin": {
-        "type": "numeric(18,4)",
-        "source_col": "ESTOQUEMIN"
-      },
-      "estoquemax": {
-        "type": "numeric(18,4)",
-        "source_col": "ESTOQUEMAX"
-      },
-      "desc_tipoitem": {
-        "type": "text",
-        "source_col": "DESC_TIPOITEM"
+        "source_col": "IDCONTACTBESTOQUE"
       },
       "sigla": {
         "type": "text",
         "source_col": "SIGLA"
-      },
-      "posicao": {
-        "type": "numeric(18,4)",
-        "source_col": "POSICAO"
-      }
-    }
-  },
-  "silver_expedição": {
-    "staging_table": "staging_expedição",
-    "columns": {
-      "codigofat": {
-        "type": "bigint",
-        "source_col": "CODIGOFAT"
-      },
-      "datahoracad": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATAHORACAD"
-      },
-      "dataentrega": {
-        "type": "text",
-        "source_col": "DATAENTREGA"
-      },
-      "conferencia": {
-        "type": "text",
-        "source_col": "CONFERENCIA"
-      },
-      "origemconferencia": {
-        "type": "numeric(18,4)",
-        "source_col": "ORIGEMCONFERENCIA"
-      },
-      "descricaoorigemconferencia": {
-        "type": "text",
-        "source_col": "DESCRICAOORIGEMCONFERENCIA"
-      },
-      "origem": {
-        "type": "text",
-        "source_col": "ORIGEM"
-      },
-      "codigooirigem": {
-        "type": "bigint",
-        "source_col": "CODIGOOIRIGEM"
-      },
-      "numerodoc": {
-        "type": "bigint",
-        "source_col": "NUMERODOC"
-      },
-      "numeropedidocliente": {
-        "type": "text",
-        "source_col": "NUMEROPEDIDOCLIENTE"
-      },
-      "codigocliente": {
-        "type": "numeric(18,4)",
-        "source_col": "CODIGOCLIENTE"
-      },
-      "razaocliente": {
-        "type": "text",
-        "source_col": "RAZAOCLIENTE"
-      },
-      "endereco": {
-        "type": "text",
-        "source_col": "ENDERECO"
-      },
-      "cep": {
-        "type": "bigint",
-        "source_col": "CEP"
-      },
-      "cidade": {
-        "type": "text",
-        "source_col": "CIDADE"
-      },
-      "uf": {
-        "type": "text",
-        "source_col": "UF"
-      },
-      "enderecoentrega": {
-        "type": "text",
-        "source_col": "ENDERECOENTREGA"
-      },
-      "cepentrega": {
-        "type": "bigint",
-        "source_col": "CEPENTREGA"
-      },
-      "cidadeentrega": {
-        "type": "text",
-        "source_col": "CIDADEENTREGA"
-      },
-      "ufentrega": {
-        "type": "text",
-        "source_col": "UFENTREGA"
-      },
-      "codigotransp": {
-        "type": "numeric(18,4)",
-        "source_col": "CODIGOTRANSP"
-      },
-      "razaotransp": {
-        "type": "text",
-        "source_col": "RAZAOTRANSP"
-      },
-      "rawtoguid(guidlote)": {
-        "type": "text",
-        "source_col": "RAWTOGUID(GUIDLOTE)"
-      },
-      "carga": {
-        "type": "text",
-        "source_col": "CARGA"
-      },
-      "codigousuario": {
-        "type": "numeric(18,4)",
-        "source_col": "CODIGOUSUARIO"
-      },
-      "nomeusuario": {
-        "type": "text",
-        "source_col": "NOMEUSUARIO"
-      },
-      "codigogrupoempresarial": {
-        "type": "numeric(18,4)",
-        "source_col": "CODIGOGRUPOEMPRESARIAL"
-      },
-      "descricaogrupoempresarial": {
-        "type": "text",
-        "source_col": "DESCRICAOGRUPOEMPRESARIAL"
-      },
-      "numeroitempedidocliente": {
-        "type": "text",
-        "source_col": "NUMEROITEMPEDIDOCLIENTE"
-      },
-      "seq": {
-        "type": "bigint",
-        "source_col": "SEQ"
-      },
-      "identificacao": {
-        "type": "text",
-        "source_col": "IDENTIFICACAO"
-      },
-      "descricao": {
-        "type": "text",
-        "source_col": "DESCRICAO"
-      },
-      "unidade": {
-        "type": "text",
-        "source_col": "UNIDADE"
-      },
-      "quantselecionada": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANTSELECIONADA"
-      },
-      "quantconferida": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANTCONFERIDA"
-      },
-      "saldo": {
-        "type": "numeric(18,4)",
-        "source_col": "SALDO"
-      },
-      "ordem": {
-        "type": "boolean",
-        "source_col": "ORDEM"
-      },
-      "codigofilial": {
-        "type": "bigint",
-        "source_col": "CODIGOFILIAL"
-      },
-      "codigoempresa": {
-        "type": "bigint",
-        "source_col": "CODIGOEMPRESA"
-      },
-      "placa": {
-        "type": "text",
-        "source_col": "PLACA"
-      },
-      "ordementrega": {
-        "type": "text",
-        "source_col": "ORDEMENTREGA"
-      },
-      "dataprevcarreg": {
-        "type": "text",
-        "source_col": "DATAPREVCARREG"
-      },
-      "statusconf": {
-        "type": "bigint",
-        "source_col": "STATUSCONF"
-      },
-      "codigotransptenant": {
-        "type": "numeric(18,4)",
-        "source_col": "CODIGOTRANSPTENANT"
-      },
-      "datahorapreparacao": {
-        "type": "text",
-        "source_col": "DATAHORAPREPARACAO"
-      },
-      "idpeditem": {
-        "type": "bigint",
-        "source_col": "IDPEDITEM"
-      }
-    }
-  },
-  "silver_filiais": {
-    "staging_table": "staging_filiais",
-    "columns": {
-      "idfilial": {
-        "type": "bigint",
-        "source_col": "IDFILIAL"
-      },
-      "datahoraalt": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATAHORAALT"
-      },
-      "idempresa": {
-        "type": "bigint",
-        "source_col": "IDEMPRESA"
-      },
-      "matriz": {
-        "type": "boolean",
-        "source_col": "MATRIZ"
-      },
-      "apelido": {
-        "type": "text",
-        "source_col": "APELIDO"
-      }
-    }
-  },
-  "silver_itens": {
-    "staging_table": "staging_itens",
-    "columns": {
-      "iditem": {
-        "type": "bigint",
-        "source_col": "IDITEM"
-      },
-      "datahoraalteracao": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATAHORAALTERACAO"
-      },
-      "identificacao": {
-        "type": "text",
-        "source_col": "IDENTIFICACAO"
-      },
-      "descricao": {
-        "type": "text",
-        "source_col": "DESCRICAO"
-      },
-      "idclassfiscal": {
-        "type": "bigint",
-        "source_col": "IDCLASSFISCAL"
-      },
-      "idun": {
-        "type": "bigint",
-        "source_col": "IDUN"
-      },
-      "idunvenda": {
-        "type": "numeric(18,4)",
-        "source_col": "IDUNVENDA"
-      },
-      "quantembvenda": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANTEMBVENDA"
-      },
-      "pesobruto": {
-        "type": "numeric(18,4)",
-        "source_col": "PESOBRUTO"
-      },
-      "pesoliq": {
-        "type": "numeric(18,4)",
-        "source_col": "PESOLIQ"
-      },
-      "obs": {
-        "type": "text",
-        "source_col": "OBS"
-      },
-      "ativo": {
-        "type": "boolean",
-        "source_col": "ATIVO"
-      },
-      "complemento": {
-        "type": "text",
-        "source_col": "COMPLEMENTO"
-      },
-      "idgrupoitem": {
-        "type": "numeric(18,4)",
-        "source_col": "IDGRUPOITEM"
-      },
-      "idtipoitem": {
-        "type": "bigint",
-        "source_col": "IDTIPOITEM"
-      },
-      "quantminvenda": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANTMINVENDA"
-      },
-      "codbarra": {
-        "type": "bigint",
-        "source_col": "CODBARRA"
-      },
-      "liberado": {
-        "type": "text",
-        "source_col": "LIBERADO"
-      },
-      "formatocodbar": {
-        "type": "numeric(18,4)",
-        "source_col": "FORMATOCODBAR"
-      }
-    }
-  },
-  "silver_requisicoes": {
-    "staging_table": "staging_requisicoes",
-    "columns": {
-      "desc_filial": {
-        "type": "text",
-        "source_col": "DESC_FILIAL"
-      },
-      "endereco_filial": {
-        "type": "text",
-        "source_col": "ENDERECO_FILIAL"
-      },
-      "cep_filial": {
-        "type": "text",
-        "source_col": "CEP_FILIAL"
-      },
-      "fax_filial": {
-        "type": "text",
-        "source_col": "FAX_FILIAL"
-      },
-      "fone_filial": {
-        "type": "text",
-        "source_col": "FONE_FILIAL"
-      },
-      "cpf_cnpj_filial": {
-        "type": "text",
-        "source_col": "CPF_CNPJ_FILIAL"
-      },
-      "insc_estadual_filial": {
-        "type": "text",
-        "source_col": "INSC_ESTADUAL_FILIAL"
-      },
-      "cidade_filial": {
-        "type": "text",
-        "source_col": "CIDADE_FILIAL"
-      },
-      "uf_filial": {
-        "type": "text",
-        "source_col": "UF_FILIAL"
-      },
-      "idempresa": {
-        "type": "bigint",
-        "source_col": "IDEMPRESA"
-      },
-      "idfilial": {
-        "type": "bigint",
-        "source_col": "IDFILIAL"
-      },
-      "idreqmat": {
-        "type": "bigint",
-        "source_col": "IDREQMAT"
-      },
-      "idreqmattenant": {
-        "type": "bigint",
-        "source_col": "IDREQMATTENANT"
-      },
-      "data": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATA"
-      },
-      "dataprevatend": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATAPREVATEND"
-      },
-      "idalmox": {
-        "type": "bigint",
-        "source_col": "IDALMOX"
-      },
-      "status": {
-        "type": "bigint",
-        "source_col": "STATUS"
       },
       "tipo": {
-        "type": "boolean",
+        "type": "text",
         "source_col": "TIPO"
-      },
-      "desc_almox": {
-        "type": "text",
-        "source_col": "DESC_ALMOX"
-      },
-      "sigla_almox": {
-        "type": "text",
-        "source_col": "SIGLA_ALMOX"
-      },
-      "idtenant": {
-        "type": "bigint",
-        "source_col": "IDTENANT"
-      },
-      "idreqmatitem": {
-        "type": "bigint",
-        "source_col": "IDREQMATITEM"
-      },
-      "quant": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANT"
-      },
-      "quantcancel": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANTCANCEL"
-      },
-      "quantatend": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANTATEND"
-      },
-      "quantsubst": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANTSUBST"
-      },
-      "saldo": {
-        "type": "numeric(18,4)",
-        "source_col": "SALDO"
-      },
-      "idrequisitante": {
-        "type": "numeric(18,4)",
-        "source_col": "IDREQUISITANTE"
-      },
-      "requisitante": {
-        "type": "text",
-        "source_col": "REQUISITANTE"
-      },
-      "sigla_un": {
-        "type": "text",
-        "source_col": "SIGLA_UN"
-      },
-      "iditem": {
-        "type": "bigint",
-        "source_col": "IDITEM"
-      },
-      "identificacao": {
-        "type": "text",
-        "source_col": "IDENTIFICACAO"
-      },
-      "descricao": {
-        "type": "text",
-        "source_col": "DESCRICAO"
-      },
-      "idgrupoitem": {
-        "type": "bigint",
-        "source_col": "IDGRUPOITEM"
-      },
-      "idcontacdc": {
-        "type": "numeric(18,4)",
-        "source_col": "IDCONTACDC"
-      },
-      "classificacaogrupoitem": {
-        "type": "bigint",
-        "source_col": "CLASSIFICACAOGRUPOITEM"
-      },
-      "desc_grupo": {
-        "type": "text",
-        "source_col": "DESC_GRUPO"
-      },
-      "descricaocontacdc": {
-        "type": "text",
-        "source_col": "DESCRICAOCONTACDC"
-      },
-      "classificacaocontacdc": {
-        "type": "text",
-        "source_col": "CLASSIFICACAOCONTACDC"
-      }
-    }
-  },
-  "silver_solcompra": {
-    "staging_table": "staging_solcompra",
-    "columns": {
-      "idsoliccompra": {
-        "type": "bigint",
-        "source_col": "IDSOLICCOMPRA"
-      },
-      "idempresa": {
-        "type": "bigint",
-        "source_col": "IDEMPRESA"
-      },
-      "idfilial": {
-        "type": "bigint",
-        "source_col": "IDFILIAL"
-      },
-      "numero": {
-        "type": "bigint",
-        "source_col": "NUMERO"
-      },
-      "idsolicitante": {
-        "type": "bigint",
-        "source_col": "IDSOLICITANTE"
-      },
-      "obs": {
-        "type": "text",
-        "source_col": "OBS"
-      },
-      "status": {
-        "type": "text",
-        "source_col": "STATUS"
-      },
-      "primeiradatanecessidade": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "PRIMEIRADATANECESSIDADE"
-      },
-      "finalidade": {
-        "type": "text",
-        "source_col": "FINALIDADE"
-      },
-      "idsoliccompraitem": {
-        "type": "bigint",
-        "source_col": "IDSOLICCOMPRAITEM"
-      },
-      "identificacao": {
-        "type": "bigint",
-        "source_col": "IDENTIFICACAO"
-      },
-      "idun": {
-        "type": "bigint",
-        "source_col": "IDUN"
-      },
-      "quant": {
-        "type": "numeric(18,4)",
-        "source_col": "QUANT"
-      },
-      "datanecessidade": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATANECESSIDADE"
-      },
-      "complemento": {
-        "type": "text",
-        "source_col": "COMPLEMENTO"
-      },
-      "saldo": {
-        "type": "numeric(18,4)",
-        "source_col": "SALDO"
-      },
-      "urgente": {
-        "type": "boolean",
-        "source_col": "URGENTE"
-      },
-      "urgente_desc": {
-        "type": "text",
-        "source_col": "URGENTE_DESC"
-      },
-      "idcontacdc": {
-        "type": "numeric(18,4)",
-        "source_col": "IDCONTACDC"
-      },
-      "classificacao": {
-        "type": "text",
-        "source_col": "CLASSIFICACAO"
-      },
-      "descricao": {
-        "type": "text",
-        "source_col": "DESCRICAO"
-      }
-    }
-  },
-  "silver_unidades": {
-    "staging_table": "staging_unidades",
-    "columns": {
-      "idun": {
-        "type": "bigint",
-        "source_col": "IDUN"
-      },
-      "idunidadetenant": {
-        "type": "bigint",
-        "source_col": "IDUNIDADETENANT"
-      },
-      "descricao": {
-        "type": "text",
-        "source_col": "DESCRICAO"
-      },
-      "sigla": {
-        "type": "text",
-        "source_col": "SIGLA"
-      },
-      "siglafci": {
-        "type": "text",
-        "source_col": "SIGLAFCI"
-      },
-      "datahoraalteracao": {
-        "type": "timestamp",
-        "format": "%Y-%m-%dT%H:%M:%S",
-        "source_col": "DATAHORAALTERACAO"
       },
       "status": {
         "type": "text",

@@ -1,8 +1,8 @@
 # %% [markdown]
-#  # Extração de API Useall
+#   # Extração de API Useall
 
 # %% [markdown]
-#  ## Tools and functions
+#   ## Tools and functions
 
 # %%
 import os
@@ -136,11 +136,12 @@ print(f"--- Pipeline iniciada em {time.strftime('%d/%m/%Y %H:%M:%S')} ---")
 
 
 
-# %% [markdown]
-#  ## Variaveis de filtros
 
 # %% [markdown]
-#  ### Simples
+#   ## Variaveis de filtros
+
+# %% [markdown]
+#   ### Simples
 
 # %%
 params_fixos = {"pagina": 1, "qtderegistros": 1}
@@ -240,52 +241,113 @@ tarefas_simples = [
 
 
 
+
 # %% [markdown]
-#  ### COMPLEXAS
+#   ### COMPLEXAS
 
 # %%
-
 filtros_req = [
-    {"Nome": "IDFILIAL", "Valor": [333,334,335,336,387,404,520,558,578,339,340,342,343,341,344,345,346,381,389,390], "Operador": 1},
-    {"Nome": "DATA", "Valor": "01/01/2010,01/01/2027", "Operador": 8, "TipoPeriodoData": 5},
-    {"Nome": "DATAPREVATEND", "Valor": "01/01/2010,01/01/2027", "Operador": 8, "TipoPeriodoData": 8},
+    {
+        "Nome": "IDFILIAL",
+        "Valor": [
+            333,
+            339,
+            340,
+            381,
+            389,
+            336,
+            387,
+            520,
+            404,
+            558,
+            578,
+            341,
+            390,
+            345,
+            344,
+            346,
+            335,
+            334,
+            342,
+            343,
+        ],
+        "Operador": 1,
+    },
+    {
+        "Nome": "DATA",
+        "Valor": "01/01/2010,01/01/2027",
+        "Operador": 8,
+        "TipoPeriodoData": 5,
+    },
+    {
+        "Nome": "DATAPREVATEND",
+        "Valor": "01/01/2010,01/01/2027",
+        "Operador": 8,
+        "TipoPeriodoData": 8,
+    },
     {"Nome": "CLASSGRUPOITEM", "Valor": ""},
     {"Nome": "CLASSCONTACDC", "Valor": ""},
     {"Nome": "quebra", "Valor": 1},
-    {"Nome": "FILTROSWHERE", "Valor": " AND IDEMPRESA = 211"}
+    {"Nome": "FILTROSWHERE", "Valor": " AND IDEMPRESA = 211"},
 ]
 
 filtros_estoque = [
-    {"Nome": "ADDATA", "Valor": "08/01/2010"},
+    {"Nome": "ADDATA", "Valor": "22/01/2026"},
+    {"Nome": "ANQUEBRA", "Valor": 0},
+    {"Nome": "FILTROSWHEREFORNEC", "Valor": ""},
+    {
+        "Nome": "FILTROSREGISTROSATIVO",
+        "Valor": " AND ITEM.ATIVO = 1 AND ALMOX.ATIVO = 1 AND ITEMALMOX.ATIVO = 1",
+    },
     {
         "Nome": "FILTROSWHERE",
-        "Valor": " AND EXISTS (SELECT 1 FROM USE_USUARIOS_FILIAIS UFILIAIS "
-                "WHERE UFILIAIS.IDEMPRESA = T.IDEMPRESA "
-                "AND UFILIAIS.IDFILIAL = T.IDFILIAL "
-                "AND UFILIAIS.IDUSUARIO = 7332) "
-                "AND T.IDFILIAL IN (333,334,336,404,335,387,520,558,578)"
+        "Valor": " AND EXISTS(SELECT 1 FROM USE_USUARIOS_FILIAIS UFILIAIS "
+        "WHERE UFILIAIS.IDEMPRESA = T.IDEMPRESA "
+        "AND UFILIAIS.IDFILIAL = T.IDFILIAL "
+        "AND UFILIAIS.IDUSUARIO = 7332) "
+        "AND T.IDFILIAL in (333,339, 340, 381, 389, 336, 387, 520, 404, 558, 578, 341, 390, 345, 344, 346, 335, 334, 342, 343)",
     },
-    {"Nome": "ANQUEBRA", "Valor": 0}
 ]
+
+
+"""    "Parametros": [
+        {
+            "Nome": "filter",
+            "Valor": "Filial: LOJA - ARARANGUA\nData: 22/01/2026\nIncluir apenas itens e almoxarifados ativos: Sim",
+        },
+        {"Nome": "quebra", "Valor": 0},
+        {"Nome": "ordenacao", "Valor": 0},
+    ],
+    
+    "Identificacao": "m2_estoque_saldo_de_estoque",
+    "FiltrosSql": [
+        {"Nome": "ADDATA", "Valor": "22/01/2026"},
+        {"Nome": "ANQUEBRA", "Valor": 0},
+        {"Nome": "FILTROSWHEREFORNEC", "Valor": ""},
+        {
+            "Nome": "FILTROSREGISTROSATIVO",
+            "Valor": " AND ITEM.ATIVO = 1 AND ALMOX.ATIVO = 1 AND ITEMALMOX.ATIVO = 1",
+        },
+"""
+
 
 filtros_atend = [
     {
         "Nome": "FILTROSWHERE",
         "Valor": (
             "WHERE IDEMPRESA = 211 "
-            "AND IDFILIAL IN (333,334,335,336,387,404,520,558,339,578,340,342,343,341,344,345,346,381,389,390) "
+            "AND IDFILIAL IN (333,339, 340, 381, 389, 336, 387, 520, 404, 558, 578, 341, 390, 345, 344, 346, 335, 334, 342, 343) "
             "AND DATA_REQ BETWEEN '01/01/1900' AND '01/01/2900' "
             "AND DATA_ATEND BETWEEN '01/01/1900' AND '01/01/2900'"
-        )
+        ),
     }
 ]
 
 params_atend = {
     "NomeOrganizacao": "SETUP SERVICOS ESPECIALIZADOS LTDA",
-    "Parametros": json.dumps([
-        {"Nome": "usecellmerging", "Valor": True},
-        {"Nome": "quebra", "Valor": 0}
-    ])
+    "Parametros": json.dumps(
+        [{"Nome": "usecellmerging", "Valor": True}, {"Nome": "quebra", "Valor": 0}]
+    ),
 }
 
 # ===============================
@@ -296,7 +358,7 @@ tarefa_requisicoes = {
     "nome": "dfuseallrequisicoes",
     "id": "m2_estoque_requisicao_de_materiais",
     "filtros": filtros_req,
-    "extra_params": None
+    "extra_params": None,
 }
 
 
@@ -306,9 +368,9 @@ tarefa_requisicoes = {
 
 tarefa_estoque = {
     "nome": "dfuseallestoque",
-    "id": "09249662000174_m2_estoque_saldo_de_estoque__setup",
+    "id": "m2_estoque_saldo_de_estoque",
     "filtros": filtros_estoque,
-    "extra_params": None
+    "extra_params": None,
 }
 
 # ===============================
@@ -319,95 +381,253 @@ tarefa_atendimento = {
     "nome": "dfuseallatendimentodereq",
     "id": "m2_estoque_atendimentos_de_requisicao",
     "filtros": filtros_atend,
-    "extra_params": params_atend
+    "extra_params": params_atend,
 }
 
-
-
+# %% [markdown]
+#   ## Criando DataFrames
 
 # %% [markdown]
-#  ## Criando DataFrames
-
-# %% [markdown]
-#  ### Usando funções
+#   ### Usando funções
 
 # %%
 carregar_dfs_globais(tarefas_simples)
+
 
 
 # %%
 carregar_tarefa_complexa(tarefa_estoque)
 
 
+
 # %%
 carregar_tarefa_complexa(tarefa_atendimento)
 
 
-# %% [markdown]
-#  ### Api Custos - Particularidade de loop
 
 # %%
-import subprocess
-import sys
-from datetime import datetime
-
-process = subprocess.Popen(
-    [sys.executable, "apicustos.py"],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.STDOUT,
-    text=True,
-    bufsize=1
-)
-
-print("[INFO] API de custos iniciada\n")
-
-for line in process.stdout:
-    now = datetime.now().strftime("%H:%M:%S")
-    print(f"[{now}] {line}", end="")
-
-process.wait()
-
-print("\n[INFO] API de custos finalizada")
-
+carregar_tarefa_complexa(tarefa_requisicoes)
 
 # %% [markdown]
-#  ### Verificando Tipos
+#   ### Api Custos - Particularidade de loop
+
+# %%
+# %%
+# IMPORTS E ENV
+import os
+import time
+import json
+import logging
+import requests
+import pandas as pd
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from dotenv import load_dotenv
+
+
+load_dotenv(override=True)
+
+BASE_URL = os.getenv("USEALL_BASE_URL")
+TOKEN = os.getenv("USEALL_TOKEN")
+
+IDENTIFICACAO = "m2_estoque_custos"
+DATA_REF = datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y")
+ESPERA = 185
+
+HEADERS = {
+    "accept": "application/json",
+    "use-relatorio-token": TOKEN
+}
+
+# %%
+# LOGGING (Jupyter-safe)
+logger = logging.getLogger("useall_pipeline")
+logger.setLevel(logging.INFO)
+
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s | %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+# %%
+# PATHS
+RAW_DIR = "data/raw"
+RAW_FINAL = "data/staging_custos_raw.parquet"
+
+os.makedirs(RAW_DIR, exist_ok=True)
+os.makedirs("data", exist_ok=True)
+
+# %%
+# FUNÇÕES AUXILIARES
+def ja_baixado_hoje(path: str) -> bool:
+    if not os.path.exists(path):
+        return False
+    mod_time = datetime.fromtimestamp(os.path.getmtime(path))
+    return mod_time.date() == datetime.today().date()
+
+
+def log_etapa(msg: str, inicio: float | None = None) -> float:
+    agora = time.time()
+    if inicio:
+        logger.info(f"{msg} | duração: {agora - inicio:.2f}s")
+    else:
+        logger.info(msg)
+    return agora
+
+# %%
+# GRUPOS
+grupos = {
+    "ctfm": [342, 343],
+    "lojas": [335, 334],
+    "vm": [345, 344, 346],
+    "setup_automacao": [333],
+    "servicos": [339, 340, 381, 389],
+    "setup": [336, 387, 520, 404, 558, 578, 341, 390],
+}
+
+
+# %%
+# PIPELINE
+pipeline_start = log_etapa("INÍCIO DO PIPELINE")
+
+if ja_baixado_hoje(RAW_FINAL):
+    logger.info("Raw consolidado já existe e é de hoje. Pipeline encerrado.")
+else:
+    logger.info("Raw do dia não encontrado. Iniciando download por grupos.")
+
+    nomes_grupos = list(grupos.items())
+    total_grupos = len(nomes_grupos)
+
+    for idx, (nome, ids) in enumerate(nomes_grupos, start=1):
+        ultimo_grupo = idx == total_grupos
+        grupo_start = log_etapa(f"INÍCIO GRUPO {idx}/{total_grupos}: {nome}")
+
+        raw_path = f"{RAW_DIR}/{nome}.parquet"
+
+        if ja_baixado_hoje(raw_path):
+            logger.info(f"{nome} já existe e é de hoje. Pulando grupo.")
+            continue
+
+        filtros = [
+            {"Nome": "idfilial", "Valor": ids, "Operador": 1},
+            {"Nome": "FILTROSREGISTROSATIVO", "Valor": ""},
+            {"Nome": "filtroswhere", "Valor": f" AND IDFILIAL IN ({','.join(map(str, ids))})"},
+            {"Nome": "data", "Valor": DATA_REF}
+        ]
+
+        params = {
+            "Identificacao": IDENTIFICACAO,
+            "FiltrosSqlQuery": json.dumps(filtros, ensure_ascii=False)
+        }
+
+        request_start = log_etapa(f"Requisição API | Grupo {nome}")
+
+        while True:
+            r = requests.get(BASE_URL, params=params, headers=HEADERS, timeout=180)
+
+            if r.status_code == 200:
+                log_etapa(f"Resposta API OK | Grupo {nome}", request_start)
+
+                payload = r.json()
+                registros = payload.get("data") if isinstance(payload, dict) else payload
+
+                if registros:
+                    for row in registros:
+                        row["_grupo_origem"] = nome
+
+                    df = pd.DataFrame(registros)
+
+                    save_start = time.time()
+                    df.to_parquet(raw_path, engine="pyarrow", index=False)
+                    log_etapa(
+                        f"Arquivo salvo | {raw_path} | registros: {len(df)}",
+                        save_start
+                    )
+                else:
+                    logger.warning(f"Grupo {nome} retornou 0 registros")
+
+                break
+
+            if r.status_code == 429:
+                logger.warning(f"429 Rate limit | {nome} | aguardando {ESPERA}s")
+                time.sleep(ESPERA)
+                continue
+
+            if r.status_code == 400:
+                logger.error(f"400 Payload pesado | Grupo {nome}")
+                break
+
+            r.raise_for_status()
+
+        log_etapa(f"FIM GRUPO: {nome}", grupo_start)
+
+        # espera somente se NÃO for o último grupo
+        if not ultimo_grupo:
+            logger.info(f"Cooldown {ESPERA}s antes do próximo grupo")
+            time.sleep(ESPERA)
+
+log_etapa("FIM DO PIPELINE", pipeline_start)
+
+# %%
+todos_registros = []
+
+for arquivo in os.listdir(RAW_DIR):
+    if arquivo.endswith(".parquet"):
+        path = os.path.join(RAW_DIR, arquivo)
+
+        df = pd.read_parquet(path, engine="pyarrow")
+
+        # origem = nome do arquivo sem extensão
+        grupo_origem = os.path.splitext(arquivo)[0]
+        df["_grupo_origem"] = grupo_origem
+
+        todos_registros.append(df)
+        logging.info(f"Lido {arquivo} ({len(df)} registros)")
+
+if todos_registros:
+    df_final = pd.concat(todos_registros, ignore_index=True)
+    df_final.to_parquet(RAW_FINAL, engine="pyarrow", index=False)
+    logging.info(
+        f"Arquivo consolidado criado: {RAW_FINAL} ({len(df_final)} registros)"
+    )
+else:
+    logging.info("Nenhum arquivo Parquet encontrado em RAW_DIR.")
+
+# %% [markdown]
+#   ### Verificando Tipos
 
 # %%
 # --- 3. Verificação de Tipos ---
 print(f"[{time.strftime('%H:%M:%S')}] --- INICIANDO VERIFICAÇÃO DE TIPOS ---")
 verificar_tipos_dados()
 
-
 # %% [markdown]
-#  ## Configurações Banco de Dados
+#   ## Configurações Banco de Dados
 
 # %%
 # Carregando .env
 import io
 import os
 import time
-import psycopg2
-from dotenv import load_dotenv
+from urllib.parse import quote
 from sqlalchemy import create_engine, text
 
-load_dotenv(override=True)
-
-DB_URL = os.getenv("DB_URL")
-
-PG_CONN_INFO = {
-    "dbname": os.getenv("PG_DBNAME"),
-    "user": os.getenv("PG_USER"),
-    "password": os.getenv("PG_PASSWORD"),
-    "host": os.getenv("PG_HOST"),
-    "port": int(os.getenv("PG_PORT")),
-}
+user = quote(os.getenv("PG_USER"))
+password = quote(os.getenv("PG_PASSWORD"))
+host = os.getenv("PG_HOST")
+port = os.getenv("PG_PORT")
+dbname = os.getenv("PG_DBNAME")
 
 SCHEMA = os.getenv("DB_SCHEMA")
 
-# ---------------------------------------
-
+DB_URL = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
 engine = create_engine(DB_URL)
+
+# ---------------------------------------
 
 # garante schema
 with engine.connect() as conn:
@@ -416,7 +636,66 @@ with engine.connect() as conn:
 
 
 # %% [markdown]
-#  ## Staging - Bronze - Dados Brutos tipos indefinidos
+#   ## Staging - Bronze - Dados Brutos tipos indefinidos
+
+# %%
+# custos - particularidade staging
+import io
+import pandas as pd
+from sqlalchemy import text
+
+parquet_file = "data/staging_custos_raw.parquet"
+table_name = "staging_custos"
+
+df = pd.read_parquet(parquet_file, engine="pyarrow")
+
+if not df.empty:
+    csv_buffer = io.StringIO()
+    df.to_csv(
+        csv_buffer,
+        index=False,
+        header=False,
+        sep=",",
+        quotechar='"',
+        quoting=1,        # csv.QUOTE_ALL
+        escapechar="\\"
+    )
+    csv_buffer.seek(0)
+
+    cols_with_types = ", ".join([f'"{col}" TEXT' for col in df.columns])
+
+    # garante tabela + limpa dados (FAST)
+    with engine.begin() as conn:
+        conn.execute(text(f"DROP TABLE IF EXISTS {SCHEMA}.{table_name}"))
+        conn.execute(text(f"""
+            CREATE TABLE {SCHEMA}.{table_name} (
+                {cols_with_types}
+            )
+        """))
+
+    # COPY ultra-rápido
+    raw_conn = engine.raw_connection()
+    cursor = raw_conn.cursor()
+    cursor.copy_expert(
+        f"""
+        COPY {SCHEMA}.{table_name}
+        FROM STDIN
+        WITH (
+            FORMAT CSV,
+            QUOTE '"',
+            ESCAPE '\\'
+        )
+        """,
+        csv_buffer
+    )
+    raw_conn.commit()
+    cursor.close()
+    raw_conn.close()
+
+    print(f"Tabela {SCHEMA}.{table_name} substituída via COPY.")
+else:
+    print("Parquet vazio.")
+
 
 # %%
 ordem_staging = [
@@ -437,7 +716,9 @@ ordem_staging = [
     "dfuseallempresas",
     "dfuseallexpedição",
     "dfuseallclientesfornecedore",
+    "dfuseallalmoxarifados"
 ]
+
 
 
 
@@ -459,8 +740,13 @@ def copy_df_to_postgres(df, schema: str, table: str):
         na_rep="\\N"
     )
     buffer.seek(0)
-
-    conn = psycopg2.connect(**PG_CONN_INFO)
+    conn = psycopg2.connect(
+        dbname=os.getenv("PG_DBNAME"),
+        user=os.getenv("PG_USER"),
+        password=os.getenv("PG_PASSWORD"),
+        host=os.getenv("PG_HOST"),
+        port=os.getenv("PG_PORT")
+    )
     cur = conn.cursor()
 
     sql = f"""
@@ -528,9 +814,8 @@ else:
 log("PROCESSO FINALIZADO")
 
 
-
 # %% [markdown]
-#  ## Silver definindo tipos automaticamente
+#   ## Silver definindo tipos automaticamente
 
 # %%
 import json
@@ -748,10 +1033,8 @@ for silver_table, meta in schema_silver.items():
 log("--------------------------------------------------")
 log("PROCESSO FINALIZADO")
 
-
-
 # %% [markdown]
-#  ## Gold - Adicionando novas colunas e agregando valor
+#   ## Gold - Adicionando novas colunas e agregando valor
 
 # %%
 from sqlalchemy import create_engine, text
@@ -843,10 +1126,8 @@ END $$;
 with engine.begin() as conn:
     conn.execute(text(sql))
 
-
-
 # %% [markdown]
-#  ## Dim_Calendario
+#   ## Dim_Calendario
 
 # %%
 from sqlalchemy import create_engine, text
@@ -873,6 +1154,8 @@ CREATE TABLE IF NOT EXISTS useall.dim_calendario (
     semana_iso INT,
     ano_iso INT,
     trimestre INT,
+    
+    dia_mes_abr TEXT,
 
     is_fim_de_semana BOOLEAN,
     is_feriado BOOLEAN,
@@ -889,7 +1172,27 @@ CREATE INDEX IF NOT EXISTS idx_dim_calendario_ano_mes_ordem
 """)
 
 sql_atualiza_calendario = text("""
-INSERT INTO useall.dim_calendario
+INSERT INTO useall.dim_calendario (
+    data,
+    ano,
+    mes,
+    dia,
+    ano_mes,
+    ano_mes_atual,
+    ano_mes_ordem,
+    nome_mes,
+    nome_mes_abrev,
+    nome_dia,
+    nome_dia_abrev,
+    dia_semana,
+    semana_iso,
+    ano_iso,
+    trimestre,
+    dia_mes_abr,
+    is_fim_de_semana,
+    is_feriado,
+    nome_feriado
+)
 SELECT DISTINCT
     d::date AS data,
 
@@ -901,7 +1204,7 @@ SELECT DISTINCT
 
     CASE
         WHEN EXTRACT(YEAR FROM d) = EXTRACT(YEAR FROM CURRENT_DATE)
-        AND EXTRACT(MONTH FROM d) = EXTRACT(MONTH FROM CURRENT_DATE)
+         AND EXTRACT(MONTH FROM d) = EXTRACT(MONTH FROM CURRENT_DATE)
         THEN 'Mês Atual'
         ELSE TO_CHAR(d, 'YYYY/MM')
     END AS ano_mes_atual,
@@ -963,6 +1266,8 @@ SELECT DISTINCT
     EXTRACT(ISOYEAR FROM d)::int AS ano_iso,
     EXTRACT(QUARTER FROM d)::int AS trimestre,
 
+    TO_CHAR(d, 'DD/MM') AS dia_mes_abr,
+
     EXTRACT(ISODOW FROM d) IN (6,7) AS is_fim_de_semana,
     FALSE AS is_feriado,
     NULL AS nome_feriado
@@ -980,8 +1285,40 @@ with engine.begin() as conn:
     conn.execute(sql_create_indices)
     conn.execute(sql_atualiza_calendario)
 
+# %%
+import os
+from pathlib import Path
+from sqlalchemy import text
 
+# 1. Definir a raiz do projeto relativa a este arquivo script
+# Path(__file__).parent pega a pasta onde o seu script .py está
+BASE_DIR = Path(__file__).resolve().parent
 
+# 2. Montar o caminho relativo para o SQL
+# Isso vai funcionar em Windows (\\) e Linux (/) automaticamente
+sql_file_path = BASE_DIR / "sql" / "view" / "vw_gold_filiais_uf.sql"
 
+def rodar_script_sql(engine, caminho):
+    # Verificar se o arquivo realmente existe no caminho relativo
+    if not caminho.exists():
+        print(f"❌ Erro: Arquivo não encontrado!")
+        print(f"   Buscado em: {caminho}")
+        print(f"   Diretório atual de execução: {os.getcwd()}")
+        return
+
+    try:
+        # Lendo o conteúdo do SQL
+        query = caminho.read_text(encoding='utf-8')
+
+        # Executando no banco
+        with engine.begin() as conn:
+            conn.execute(text(query))
+            print(f"✅ View processada com sucesso via caminho relativo!")
+            
+    except Exception as e:
+        print(f"⚠️ Erro na execução: {e}")
+
+# Chamar a função
+rodar_script_sql(engine, sql_file_path)
 
 

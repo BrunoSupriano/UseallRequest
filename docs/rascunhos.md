@@ -150,6 +150,8 @@ https://extracao.useallcloud.com.br/api/v1/json?Identificacao=m2_estoque_saldo_d
 ```
 
 
+"FiltrosSql":[{"Nome":"ADDATA","Valor":"22/01/2026"},{"Nome":"ANQUEBRA","Valor":0},{"Nome":"FILTROSWHEREFORNEC","Valor":""},{"Nome":"FILTROSREGISTROSATIVO","Valor":" AND ITEM.ATIVO = 1 AND ALMOX.ATIVO = 1 AND ITEMALMOX.ATIVO = 1"},{"Nome":"FILTROSWHERE","Valor":" AND EXISTS(SELECT 1 FROM USE_USUARIOS_FILIAIS UFILIAIS WHERE UFILIAIS.IDEMPRESA = T.IDEMPRESA AND UFILIAIS.IDFILIAL = T.IDFILIAL AND UFILIAIS.IDUSUARIO = 7332) AND T.IDFILIAL in (334)"}]
+
 ## Em verificação com Useall
 
 ### Extrato de Estoque: Deve ser feito a busca por item. Ajustar os filtros conforme desejado.
