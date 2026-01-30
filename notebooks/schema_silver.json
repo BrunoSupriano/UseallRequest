@@ -1354,5 +1354,133 @@
         "source_col": "STATUS"
       }
     }
+  },
+  "silver_estoque_diario": {
+    "staging_table": "staging_estoque_diario",
+    "columns": {
+      "idsecao": {
+        "type": "timestamp",
+        "format": "%Y-%m-%d",
+        "source_col": "IDSECAO"
+      },
+      "idfilial": {
+        "type": "bigint",
+        "source_col": "IDFILIAL"
+      },
+      "idempresa": {
+        "type": "bigint",
+        "source_col": "IDEMPRESA"
+      },
+      "idalmox": {
+        "type": "bigint",
+        "source_col": "IDALMOX"
+      },
+      "tipoalmox": {
+        "type": "bigint",
+        "source_col": "TIPOALMOX"
+      },
+      "desc_almox": {
+        "type": "text",
+        "source_col": "DESC_ALMOX"
+      },
+      "idun": {
+        "type": "bigint",
+        "source_col": "IDUN"
+      },
+      "iditem": {
+        "type": "bigint",
+        "source_col": "IDITEM"
+      },
+      "identificacao": {
+        "type": "text",
+        "source_col": "IDENTIFICACAO"
+      },
+      "desc_item": {
+        "type": "text",
+        "source_col": "DESC_ITEM"
+      },
+      "idmarca": {
+        "type": "text",
+        "source_col": "IDMARCA"
+      },
+      "idtipoitem": {
+        "type": "bigint",
+        "source_col": "IDTIPOITEM"
+      },
+      "idgrupoitem": {
+        "type": "bigint",
+        "source_col": "IDGRUPOITEM"
+      },
+      "classificacao": {
+        "type": "bigint",
+        "source_col": "CLASSIFICACAO"
+      },
+      "desc_grupo": {
+        "type": "text",
+        "source_col": "DESC_GRUPO"
+      },
+      "desc_marca": {
+        "type": "text",
+        "source_col": "DESC_MARCA"
+      },
+      "saldofisico": {
+        "type": "numeric(18,4)",
+        "source_col": "SALDOFISICO"
+      },
+      "quantreservada": {
+        "type": "numeric(18,4)",
+        "source_col": "QUANTRESERVADA"
+      },
+      "saldodisponivel": {
+        "type": "numeric(18,4)",
+        "source_col": "SALDODISPONIVEL"
+      },
+      "estoquemin": {
+        "type": "numeric(18,4)",
+        "source_col": "ESTOQUEMIN"
+      },
+      "estoquemax": {
+        "type": "numeric(18,4)",
+        "source_col": "ESTOQUEMAX"
+      },
+      "desc_tipoitem": {
+        "type": "text",
+        "source_col": "DESC_TIPOITEM"
+      },
+      "sigla": {
+        "type": "text",
+        "source_col": "SIGLA"
+      },
+      "razaosocial_fornecedor": {
+        "type": "text",
+        "source_col": "RAZAOSOCIAL_FORNECEDOR"
+      },
+      "desativacao": {
+        "type": "boolean",
+        "source_col": "DESATIVACAO"
+      },
+      "comprasobencomenda": {
+        "type": "boolean",
+        "source_col": "COMPRASOBENCOMENDA"
+      },
+      "pontopedido": {
+        "type": "text",
+        "source_col": "PONTOPEDIDO"
+      },
+      "posicao": {
+        "type": "numeric(18,4)",
+        "source_col": "POSICAO"
+      },
+      "desc_secao": {
+        "type": "timestamp",
+        "format": "%Y-%m-%d",
+        "source_col": "DESC_SECAO"
+      },
+      "data_referencia": {
+        "type": "timestamp",
+        "format": "%Y-%m-%d",
+        "source_col": "data_referencia"
+      }
+    }
   }
 }

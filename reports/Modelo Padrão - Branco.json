@@ -1,0 +1,181 @@
+{
+    "name": "Power BI Theme by POINT – Clean Green",
+    "icons": [],
+    "dataColors": [
+        "#008C6A",
+        "#006D58",
+        "#007B5E",
+        "#5BB98E",
+        "#3FAF8A",
+        "#2E9C7A",
+        "#7ED1B2",
+        "#A6E3CC"
+    ],
+    "tableAccent": "#008C6A",
+    "good": "#008C6A",
+    "neutral": "#E0B400",
+    "bad": "#D64545",
+    "foreground": "#1F2A28",
+    "foregroundNeutralSecondary": "#6B6F6E",
+    "foregroundNeutralTertiary": "#9EA3A2",
+    "background": "#FFFFFF",
+    "backgroundLight": "#F4F7F6",
+    "backgroundNeutral": "#E6ECEA",
+    "backgroundDark": "#1F2A28",
+    "textClasses": {
+        "title": {
+            "fontFace": "Segoe UI Semibold",
+            "fontSize": 14,
+            "color": "#1F2A28"
+        },
+        "label": {
+            "fontFace": "Segoe UI",
+            "fontSize": 10,
+            "color": "#1F2A28"
+        },
+        "callout": {
+            "fontSize": 36,
+            "color": "#008C6A"
+        },
+        "header": {
+            "fontFace": "Segoe UI Semibold",
+            "fontSize": 11,
+            "color": "#006D58"
+        },
+        "largeTitle": {
+            "fontSize": 16,
+            "color": "#1F2A28"
+        },
+        "lightLabel": {
+            "color": "#6B6F6E"
+        },
+        "smallLabel": {
+            "fontSize": 9,
+            "color": "#1F2A28"
+        },
+        "smallLightLabel": {
+            "fontSize": 9,
+            "color": "#6B6F6E"
+        }
+    },
+    "visualStyles": {
+        "*": {
+            "*": {
+                "title": [
+                    {
+                        "show": false
+                    }
+                ],
+                "background": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        },
+                        "transparency": 8
+                    }
+                ],
+                "border": [
+                    {
+                        "show": false
+                    }
+                ],
+                "visualHeader": [
+                    {
+                        "background": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        },
+                        "transparency": 10,
+                        "foreground": {
+                            "solid": {
+                                "color": "#6B6F6E"
+                            }
+                        }
+                    }
+                ],
+                "visualTooltip": [
+                    {
+                        "background": {
+                            "solid": {
+                                "color": "#1F2A28"
+                            }
+                        },
+                        "titleFontColor": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        },
+                        "valueFontColor": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "slicer": {
+            "*": {
+                "background": [
+                    {
+                        "show": true,
+                        "color": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        }
+                    }
+                ],
+                "header": [
+                    {
+                        "fontColor": {
+                            "solid": {
+                                "color": "#006D58"
+                            }
+                        }
+                    }
+                ],
+                "items": [
+                    {
+                        "fontColor": {
+                            "solid": {
+                                "color": "#1F2A28"
+                            }
+                        }
+                    }
+                ],
+                "selection": [
+                    {
+                        "background": {
+                            "solid": {
+                                "color": "#008C6A"
+                            }
+                        },
+                        "fontColor": {
+                            "solid": {
+                                "color": "#FFFFFF"
+                            }
+                        }
+                    }
+                ],
+                "divider": [
+                    {
+                        "show": false
+                    }
+                ]
+            }
+        }
+    },
+    "firstLevelElements": "#008C6A",
+    "secondLevelElements": "#006D58",
+    "thirdLevelElements": "#5BB98E",
+    "fourthLevelElements": "#A6E3CC",
+    "secondaryBackground": "#F4F7F6",
+    "accent": "#008C6A",
+    "hyperlink": "#007BFF",
+    "visitedHyperlink": "#4B2E83",
+    "disabledText": "#9EA3A2"
+}

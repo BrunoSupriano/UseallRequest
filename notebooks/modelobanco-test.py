@@ -1,8 +1,10 @@
 # %% [markdown]
-#   # Extração de API Useall
+# # Extração de API Useall
+# 
 
 # %% [markdown]
-#   ## Tools and functions
+# ## Tools and functions
+# 
 
 # %%
 import os
@@ -18,31 +20,40 @@ BASE_URL = os.getenv("USEALL_BASE_URL")
 
 HEADERS = {
     "accept": "application/json",
-    "use-relatorio-token": os.getenv("USEALL_TOKEN")
+    "use-relatorio-token": os.getenv("USEALL_TOKEN"),
 }
 
-def buscar_dados_api(identificacao, nome_arquivo, backend_filters=None, extra_params=None):
+
+def buscar_dados_api(
+    identificacao, nome_arquivo, backend_filters=None, extra_params=None
+):
     """Busca dados na API UseAll e retorna um DataFrame (ou None em caso de erro/vazio)"""
-    
+
     query_params = {"Identificacao": identificacao}
-    
+
     if backend_filters:
-        query_params["FiltrosSqlQuery"] = json.dumps(backend_filters, ensure_ascii=False)
-        
+        query_params["FiltrosSqlQuery"] = json.dumps(
+            backend_filters, ensure_ascii=False
+        )
+
     if extra_params:
         query_params.update(extra_params)
 
     print(f"[{time.strftime('%H:%M:%S')}] Iniciando extração: {nome_arquivo}...")
-    
+
     while True:
         try:
-            response = requests.get(BASE_URL, headers=HEADERS, params=query_params, timeout=500)
-            
+            response = requests.get(
+                BASE_URL, headers=HEADERS, params=query_params, timeout=500
+            )
+
             if response.status_code == 429:
-                print(f"[{time.strftime('%H:%M:%S')}] Erro 429 (Too Many Requests) em {nome_arquivo}. Aguardando 185 segundos...")
+                print(
+                    f"[{time.strftime('%H:%M:%S')}] Erro 429 (Too Many Requests) em {nome_arquivo}. Aguardando 185 segundos..."
+                )
                 time.sleep(185)
                 continue
-                
+
             response.raise_for_status()
 
             data = response.json()
@@ -50,28 +61,78 @@ def buscar_dados_api(identificacao, nome_arquivo, backend_filters=None, extra_pa
             return df
 
         except requests.exceptions.Timeout:
-            print(f"[{time.strftime('%H:%M:%S')}] Timeout atingido para {nome_arquivo}. Aguardando 185 segundos...")
+            print(
+                f"[{time.strftime('%H:%M:%S')}] Timeout atingido para {nome_arquivo}. Aguardando 185 segundos..."
+            )
             time.sleep(185)
             continue
-            
+
         except Exception as e:
-            print(f"[{time.strftime('%H:%M:%S')}] Erro irrecuperável em {nome_arquivo}: {str(e)}")
+            print(
+                f"[{time.strftime('%H:%M:%S')}] Erro irrecuperável em {nome_arquivo}: {str(e)}"
+            )
             return None
+
+def buscar_dados_api_post(nome_arquivo, payload):
+    print(f"[{time.strftime('%H:%M:%S')}] Iniciando extração: {nome_arquivo}...")
+
+    while True:
+        try:
+            response = requests.post(
+                BASE_URL,
+                headers=HEADERS,
+                json=payload,
+                timeout=500,
+            )
+
+            if response.status_code == 429:
+                print(
+                    f"[{time.strftime('%H:%M:%S')}] Erro 429 em {nome_arquivo}. Aguardando 185 segundos..."
+                )
+                time.sleep(185)
+                continue
+
+            response.raise_for_status()
+
+            data = response.json()
+            return pd.DataFrame(data)
+
+        except requests.exceptions.Timeout:
+            print(
+                f"[{time.strftime('%H:%M:%S')}] Timeout em {nome_arquivo}. Aguardando 185 segundos..."
+            )
+            time.sleep(185)
+            continue
+
+        except Exception as e:
+            print(
+                f"[{time.strftime('%H:%M:%S')}] Erro irrecuperável em {nome_arquivo}: {str(e)}"
+            )
+            return None
+
+
 
 def salvar_parquet(df, nome_arquivo):
     """Salva o DataFrame em arquivo parquet"""
     if df is not None and not df.empty:
         # Garante extensão .parquet
-        if not nome_arquivo.endswith('.parquet'):
-            nome_arquivo += '.parquet'
-        
+        if not nome_arquivo.endswith(".parquet"):
+            nome_arquivo += ".parquet"
+
         try:
             df.to_parquet(nome_arquivo, index=False)
-            print(f"[{time.strftime('%H:%M:%S')}] Sucesso ao salvar: {nome_arquivo} (Linhas: {len(df)})")
+            print(
+                f"[{time.strftime('%H:%M:%S')}] Sucesso ao salvar: {nome_arquivo} (Linhas: {len(df)})"
+            )
         except Exception as e:
-            print(f"[{time.strftime('%H:%M:%S')}] Erro ao salvar {nome_arquivo}: {str(e)}")
+            print(
+                f"[{time.strftime('%H:%M:%S')}] Erro ao salvar {nome_arquivo}: {str(e)}"
+            )
     else:
-        print(f"[{time.strftime('%H:%M:%S')}] Nada a salvar para {nome_arquivo} (DataFrame vazio ou None)")
+        print(
+            f"[{time.strftime('%H:%M:%S')}] Nada a salvar para {nome_arquivo} (DataFrame vazio ou None)"
+        )
+
 
 def verificar_tipos_dados():
     print("\n" + "=" * 40)
@@ -94,35 +155,36 @@ def verificar_tipos_dados():
     if not encontrou:
         print("Nenhum DataFrame encontrado em memória.")
 
+
 # --- Defines Auxiliares de Filtro ---
 def filtro_simples(nome, valor):
-    return {"Nome": nome, "Valor": valor, "Operador": None, "Descricao": None, "ValorFormatado": None}
+    return {
+        "Nome": nome,
+        "Valor": valor,
+        "Operador": None,
+        "Descricao": None,
+        "ValorFormatado": None,
+    }
+
 
 def carregar_dfs_globais(tarefas):
     print(f"[{time.strftime('%H:%M:%S')}] --- INICIANDO CARGA EM MEMÓRIA ---")
 
     for t in tarefas:
         nome = t["nome"]
-        df = buscar_dados_api(
-            t["id"],
-            nome,
-            t.get("filtros"),
-            t.get("extra_params")
-        )
+        df = buscar_dados_api(t["id"], nome, t.get("filtros"), t.get("extra_params"))
 
         if df is not None:
             globals()[nome] = df
         else:
             print(f"[{time.strftime('%H:%M:%S')}] Falha ao carregar {nome}")
 
+
 def carregar_tarefa_complexa(tarefa):
     nome = tarefa["nome"]
 
     df = buscar_dados_api(
-        tarefa["id"],
-        nome,
-        tarefa.get("filtros"),
-        tarefa.get("extra_params")
+        tarefa["id"], nome, tarefa.get("filtros"), tarefa.get("extra_params")
     )
 
     if df is not None:
@@ -134,14 +196,13 @@ def carregar_tarefa_complexa(tarefa):
 pipeline_start = time.time()
 print(f"--- Pipeline iniciada em {time.strftime('%d/%m/%Y %H:%M:%S')} ---")
 
-
-
+# %% [markdown]
+# ## Variaveis de filtros
+# 
 
 # %% [markdown]
-#   ## Variaveis de filtros
-
-# %% [markdown]
-#   ### Simples
+# ### Simples
+# 
 
 # %%
 params_fixos = {"pagina": 1, "qtderegistros": 1}
@@ -152,98 +213,96 @@ tarefas_simples = [
         "id": "m2_estoque_item",
         "filtros": [
             filtro_simples("DATAHORAALTERACAOINI", "01/01/1900"),
-            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027")
+            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallunidades",
         "id": "m2_estoque_unidade",
         "filtros": [
             filtro_simples("DATAHORAALTERACAOINI", "01/01/1900"),
-            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027")
+            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallsegmentos",
         "id": "m2_vendas_segmento",
         "filtros": [
             filtro_simples("DATAHORAALTERACAOINI", "01/01/1900"),
-            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027")
+            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallcidades",
         "id": "m2_geral_cidades",
         "filtros": [
             filtro_simples("DATAHORAALTERACAOINI", "01/01/1900"),
-            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027")
+            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallsolcompra",
         "id": "m2_compras_m2_compras_solicitacao_de_compras__extra",
         "filtros": [
             filtro_simples("DATAINI", "01/01/1900"),
-            filtro_simples("DataFim", "01/01/2500")
+            filtro_simples("DataFim", "01/01/2027"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallfiliais",
         "id": "m2_geral_filiais",
         "filtros": [
             filtro_simples("DATAHORAALTINI", "01/01/1900, 11:00:00"),
-            filtro_simples("DATAHORAALTFIM", "01/01/2500, 14:00:00")
+            filtro_simples("DATAHORAALTFIM", "01/01/2027, 14:00:00"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallempresas",
         "id": "m2_geral_empresas",
         "filtros": [
             filtro_simples("DATAHORAALTINI", "01/01/2022, 11:00:00"),
-            filtro_simples("DATAHORAALTFIM", "01/01/2027, 14:00:00")
+            filtro_simples("DATAHORAALTFIM", "01/01/2027, 14:00:00"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallexpedição",
         "id": "m2_vendas_extracao_de_dados__saida_expedicao",
         "filtros": [
             filtro_simples("data1", "01/01/1900"),
-            filtro_simples("data2", "01/01/2500")
+            filtro_simples("data2", "01/01/2027"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallclientesfornecedore",
         "id": "m2_geral_clientes__fornecedores",
         "filtros": [
             filtro_simples("DATAHORAALTERACAOINI", "01/01/1900"),
-            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027")
+            filtro_simples("DATAHORAALTERACAOFIM", "01/01/2027"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
     {
         "nome": "dfuseallalmoxarifados",
         "id": "m2_estoque_almoxarifados",
         "filtros": [
             filtro_simples("DATAHORAALTINI", "01/01/1900"),
-            filtro_simples("DATAHORAALTFIM", "01/01/2500")
+            filtro_simples("DATAHORAALTFIM", "01/01/2027"),
         ],
-        "extra_params": params_fixos
+        "extra_params": params_fixos,
     },
 ]
 
-
-
-
 # %% [markdown]
-#   ### COMPLEXAS
+# ### COMPLEXAS
+# 
 
 # %%
 filtros_req = [
@@ -291,8 +350,10 @@ filtros_req = [
     {"Nome": "FILTROSWHERE", "Valor": " AND IDEMPRESA = 211"},
 ]
 
+from datetime import datetime
+
 filtros_estoque = [
-    {"Nome": "ADDATA", "Valor": "22/01/2026"},
+    {"Nome": "ADDATA", "Valor": datetime.now().strftime("%d/%m/%Y")},
     {"Nome": "ANQUEBRA", "Valor": 0},
     {"Nome": "FILTROSWHEREFORNEC", "Valor": ""},
     {
@@ -305,30 +366,9 @@ filtros_estoque = [
         "WHERE UFILIAIS.IDEMPRESA = T.IDEMPRESA "
         "AND UFILIAIS.IDFILIAL = T.IDFILIAL "
         "AND UFILIAIS.IDUSUARIO = 7332) "
-        "AND T.IDFILIAL in (333,339, 340, 381, 389, 336, 387, 520, 404, 558, 578, 341, 390, 345, 344, 346, 335, 334, 342, 343)",
+        "AND T.IDFILIAL in (333,339,340,381,389,336,387,520,404,558,578,341,390,345,344,346,335,334,342,343)",
     },
 ]
-
-
-"""    "Parametros": [
-        {
-            "Nome": "filter",
-            "Valor": "Filial: LOJA - ARARANGUA\nData: 22/01/2026\nIncluir apenas itens e almoxarifados ativos: Sim",
-        },
-        {"Nome": "quebra", "Valor": 0},
-        {"Nome": "ordenacao", "Valor": 0},
-    ],
-    
-    "Identificacao": "m2_estoque_saldo_de_estoque",
-    "FiltrosSql": [
-        {"Nome": "ADDATA", "Valor": "22/01/2026"},
-        {"Nome": "ANQUEBRA", "Valor": 0},
-        {"Nome": "FILTROSWHEREFORNEC", "Valor": ""},
-        {
-            "Nome": "FILTROSREGISTROSATIVO",
-            "Valor": " AND ITEM.ATIVO = 1 AND ALMOX.ATIVO = 1 AND ITEMALMOX.ATIVO = 1",
-        },
-"""
 
 
 filtros_atend = [
@@ -385,31 +425,28 @@ tarefa_atendimento = {
 }
 
 # %% [markdown]
-#   ## Criando DataFrames
+# ## Criando DataFrames
+# 
 
 # %% [markdown]
-#   ### Usando funções
+# ### Usando funções
+# 
 
 # %%
 carregar_dfs_globais(tarefas_simples)
 
-
-
 # %%
 carregar_tarefa_complexa(tarefa_estoque)
 
-
-
 # %%
 carregar_tarefa_complexa(tarefa_atendimento)
-
-
 
 # %%
 carregar_tarefa_complexa(tarefa_requisicoes)
 
 # %% [markdown]
-#   ### Api Custos - Particularidade de loop
+# ### Api Custos - Particularidade de loop
+# 
 
 # %%
 # %%
@@ -434,10 +471,7 @@ IDENTIFICACAO = "m2_estoque_custos"
 DATA_REF = datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y")
 ESPERA = 185
 
-HEADERS = {
-    "accept": "application/json",
-    "use-relatorio-token": TOKEN
-}
+HEADERS = {"accept": "application/json", "use-relatorio-token": TOKEN}
 
 # %%
 # LOGGING (Jupyter-safe)
@@ -447,19 +481,19 @@ logger.setLevel(logging.INFO)
 if not logger.handlers:
     handler = logging.StreamHandler()
     formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S"
+        "%(asctime)s | %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
     )
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
 # %%
 # PATHS
-RAW_DIR = "data/raw"
+RAW_DIR = "data/raw/custos"
 RAW_FINAL = "data/staging_custos_raw.parquet"
 
 os.makedirs(RAW_DIR, exist_ok=True)
 os.makedirs("data", exist_ok=True)
+
 
 # %%
 # FUNÇÕES AUXILIARES
@@ -477,6 +511,7 @@ def log_etapa(msg: str, inicio: float | None = None) -> float:
     else:
         logger.info(msg)
     return agora
+
 
 # %%
 # GRUPOS
@@ -515,13 +550,16 @@ else:
         filtros = [
             {"Nome": "idfilial", "Valor": ids, "Operador": 1},
             {"Nome": "FILTROSREGISTROSATIVO", "Valor": ""},
-            {"Nome": "filtroswhere", "Valor": f" AND IDFILIAL IN ({','.join(map(str, ids))})"},
-            {"Nome": "data", "Valor": DATA_REF}
+            {
+                "Nome": "filtroswhere",
+                "Valor": f" AND IDFILIAL IN ({','.join(map(str, ids))})",
+            },
+            {"Nome": "data", "Valor": DATA_REF},
         ]
 
         params = {
             "Identificacao": IDENTIFICACAO,
-            "FiltrosSqlQuery": json.dumps(filtros, ensure_ascii=False)
+            "FiltrosSqlQuery": json.dumps(filtros, ensure_ascii=False),
         }
 
         request_start = log_etapa(f"Requisição API | Grupo {nome}")
@@ -533,7 +571,9 @@ else:
                 log_etapa(f"Resposta API OK | Grupo {nome}", request_start)
 
                 payload = r.json()
-                registros = payload.get("data") if isinstance(payload, dict) else payload
+                registros = (
+                    payload.get("data") if isinstance(payload, dict) else payload
+                )
 
                 if registros:
                     for row in registros:
@@ -544,8 +584,7 @@ else:
                     save_start = time.time()
                     df.to_parquet(raw_path, engine="pyarrow", index=False)
                     log_etapa(
-                        f"Arquivo salvo | {raw_path} | registros: {len(df)}",
-                        save_start
+                        f"Arquivo salvo | {raw_path} | registros: {len(df)}", save_start
                     )
                 else:
                     logger.warning(f"Grupo {nome} retornou 0 registros")
@@ -591,14 +630,98 @@ for arquivo in os.listdir(RAW_DIR):
 if todos_registros:
     df_final = pd.concat(todos_registros, ignore_index=True)
     df_final.to_parquet(RAW_FINAL, engine="pyarrow", index=False)
-    logging.info(
-        f"Arquivo consolidado criado: {RAW_FINAL} ({len(df_final)} registros)"
-    )
+    logging.info(f"Arquivo consolidado criado: {RAW_FINAL} ({len(df_final)} registros)")
 else:
     logging.info("Nenhum arquivo Parquet encontrado em RAW_DIR.")
 
 # %% [markdown]
-#   ### Verificando Tipos
+# ### Api Estoques - Consolida diariamente
+
+# %%
+import json
+import time
+from datetime import datetime, timedelta
+from pathlib import Path
+
+import requests
+import pandas as pd
+
+
+def coletar_e_consolidar_estoque_matriz():
+    data_inicio = datetime.strptime("01/01/2026", "%d/%m/%Y")
+    data_fim = datetime.now()
+
+    pasta_raw = Path("data/raw/estoque")
+    pasta_raw.mkdir(parents=True, exist_ok=True)
+
+    data_atual = data_inicio
+
+    while data_atual <= data_fim:
+        data_br = data_atual.strftime("%d/%m/%Y")
+        data_iso = data_atual.strftime("%Y-%m-%d")
+
+        arquivo = pasta_raw / f"estoque_{data_iso}.parquet"
+        if arquivo.exists():
+            data_atual += timedelta(days=1)
+            continue
+
+        filtros_estoque = [
+            {"Nome": "ADDATA", "Valor": data_br},
+            {"Nome": "ANQUEBRA", "Valor": 0},
+            {"Nome": "FILTROSWHEREFORNEC", "Valor": ""},
+            {
+                "Nome": "FILTROSREGISTROSATIVO",
+                "Valor": " AND ITEM.ATIVO = 1 AND ALMOX.ATIVO = 1 AND ITEMALMOX.ATIVO = 1",
+            },
+            {
+                "Nome": "FILTROSWHERE",
+                "Valor": " AND EXISTS(SELECT 1 FROM USE_USUARIOS_FILIAIS UFILIAIS "
+                "WHERE UFILIAIS.IDEMPRESA = T.IDEMPRESA "
+                "AND UFILIAIS.IDFILIAL = T.IDFILIAL "
+                "AND UFILIAIS.IDUSUARIO = 7332) "
+                "AND T.IDFILIAL in (333)",
+            },
+        ]
+
+        df = buscar_dados_api(
+            identificacao="m2_estoque_saldo_de_estoque",
+            nome_arquivo=f"estoque_{data_iso}",
+            backend_filters=filtros_estoque,
+        )
+
+        if df is not None and not df.empty:
+            df["data_referencia"] = data_iso
+            df.to_parquet(arquivo, index=False)
+
+        data_atual += timedelta(days=1)
+
+    arquivos = sorted(pasta_raw.glob("estoque_*.parquet"))
+    if not arquivos:
+        return pd.DataFrame()
+
+    df_final = pd.concat(
+        [pd.read_parquet(a) for a in arquivos],
+        ignore_index=True,
+    )
+
+    df_final.to_parquet(
+        "data/staging_estoque_day_raw.parquet",
+        index=False,
+    )
+
+    return df_final
+
+# ===============================
+# EXECUÇÃO
+# ===============================
+
+dfuseallestoque_diario_matriz = coletar_e_consolidar_estoque_matriz()
+
+dfuseallestoque_diario_matriz.head()
+
+# %% [markdown]
+# ### Verificando Tipos
+# 
 
 # %%
 # --- 3. Verificação de Tipos ---
@@ -606,7 +729,8 @@ print(f"[{time.strftime('%H:%M:%S')}] --- INICIANDO VERIFICAÇÃO DE TIPOS ---")
 verificar_tipos_dados()
 
 # %% [markdown]
-#   ## Configurações Banco de Dados
+# ## Configurações Banco de Dados
+# 
 
 # %%
 # Carregando .env
@@ -634,12 +758,74 @@ with engine.connect() as conn:
     conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA}"))
     conn.commit()
 
-
 # %% [markdown]
-#   ## Staging - Bronze - Dados Brutos tipos indefinidos
+# ## Staging - Bronze - Dados Brutos tipos indefinidos
+# 
 
 # %%
-# custos - particularidade staging
+# staging custos - Loop por ID 
+import io
+import pandas as pd
+from sqlalchemy import text
+
+parquet_file = "data/staging_estoque_day_raw.parquet"
+table_name = "staging_estoque_diario"
+
+df = pd.read_parquet(parquet_file, engine="pyarrow")
+
+if not df.empty:
+    csv_buffer = io.StringIO()
+    df.to_csv(
+        csv_buffer,
+        index=False,
+        header=False,
+        sep=",",
+        quotechar='"',
+        quoting=1,  # csv.QUOTE_ALL
+        escapechar="\\",
+    )
+    csv_buffer.seek(0)
+
+    cols_with_types = ", ".join([f'"{col}" TEXT' for col in df.columns])
+
+    # garante tabela + limpa dados (FAST)
+    with engine.begin() as conn:
+        conn.execute(text(f"DROP TABLE IF EXISTS {SCHEMA}.{table_name}"))
+        conn.execute(
+            text(
+                f"""
+            CREATE TABLE {SCHEMA}.{table_name} (
+                {cols_with_types}
+            )
+        """
+            )
+        )
+
+    # COPY ultra-rápido
+    raw_conn = engine.raw_connection()
+    cursor = raw_conn.cursor()
+    cursor.copy_expert(
+        f"""
+        COPY {SCHEMA}.{table_name}
+        FROM STDIN
+        WITH (
+            FORMAT CSV,
+            QUOTE '"',
+            ESCAPE '\\'
+        )
+        """,
+        csv_buffer,
+    )
+    raw_conn.commit()
+    cursor.close()
+    raw_conn.close()
+
+    print(f"Tabela {SCHEMA}.{table_name} substituída via COPY.")
+else:
+    print("Parquet vazio.")
+
+# %%
+# staging custos - Loop por ID 
 import io
 import pandas as pd
 from sqlalchemy import text
@@ -657,8 +843,8 @@ if not df.empty:
         header=False,
         sep=",",
         quotechar='"',
-        quoting=1,        # csv.QUOTE_ALL
-        escapechar="\\"
+        quoting=1,  # csv.QUOTE_ALL
+        escapechar="\\",
     )
     csv_buffer.seek(0)
 
@@ -667,11 +853,15 @@ if not df.empty:
     # garante tabela + limpa dados (FAST)
     with engine.begin() as conn:
         conn.execute(text(f"DROP TABLE IF EXISTS {SCHEMA}.{table_name}"))
-        conn.execute(text(f"""
+        conn.execute(
+            text(
+                f"""
             CREATE TABLE {SCHEMA}.{table_name} (
                 {cols_with_types}
             )
-        """))
+        """
+            )
+        )
 
     # COPY ultra-rápido
     raw_conn = engine.raw_connection()
@@ -686,7 +876,7 @@ if not df.empty:
             ESCAPE '\\'
         )
         """,
-        csv_buffer
+        csv_buffer,
     )
     raw_conn.commit()
     cursor.close()
@@ -696,7 +886,6 @@ if not df.empty:
 else:
     print("Parquet vazio.")
 
-
 # %%
 ordem_staging = [
     # simples iniciais
@@ -704,23 +893,18 @@ ordem_staging = [
     "dfuseallunidades",
     "dfuseallsegmentos",
     "dfuseallcidades",
-
     # complexas no meio
     "dfuseallrequisicoes",
     "dfuseallestoque",
     "dfuseallatendimentodereq",
-
     # simples finais
     "dfuseallsolcompra",
     "dfuseallfiliais",
     "dfuseallempresas",
     "dfuseallexpedição",
     "dfuseallclientesfornecedore",
-    "dfuseallalmoxarifados"
+    "dfuseallalmoxarifados",
 ]
-
-
-
 
 # %%
 def log(msg: str):
@@ -732,20 +916,14 @@ def copy_df_to_postgres(df, schema: str, table: str):
     import io
 
     buffer = io.StringIO()
-    df.to_csv(
-        buffer,
-        index=False,
-        header=False,
-        sep="\t",
-        na_rep="\\N"
-    )
+    df.to_csv(buffer, index=False, header=False, sep="\t", na_rep="\\N")
     buffer.seek(0)
     conn = psycopg2.connect(
         dbname=os.getenv("PG_DBNAME"),
         user=os.getenv("PG_USER"),
         password=os.getenv("PG_PASSWORD"),
         host=os.getenv("PG_HOST"),
-        port=os.getenv("PG_PORT")
+        port=os.getenv("PG_PORT"),
     )
     cur = conn.cursor()
 
@@ -760,6 +938,7 @@ def copy_df_to_postgres(df, schema: str, table: str):
     conn.commit()
     cur.close()
     conn.close()
+
 
 tabelas_criadas = 0
 dfs_nao_encontrados = []
@@ -781,11 +960,7 @@ for df_nome in ordem_staging:
     # 1️⃣ cria estrutura (DDL leve)
     with engine.connect() as conn:
         df.head(0).to_sql(
-            name=tabela,
-            con=conn,
-            schema=SCHEMA,
-            if_exists="replace",
-            index=False
+            name=tabela, con=conn, schema=SCHEMA, if_exists="replace", index=False
         )
         conn.commit()
 
@@ -813,9 +988,9 @@ else:
 
 log("PROCESSO FINALIZADO")
 
-
 # %% [markdown]
-#   ## Silver definindo tipos automaticamente
+# ## Silver definindo tipos automaticamente
+# 
 
 # %%
 import json
@@ -824,27 +999,40 @@ from pathlib import Path
 SCHEMA_FILE = Path("schema_silver.json")
 
 SCHEMA = "useall"
-SAMPLE_LIMIT = 50000
+SAMPLE_LIMIT = 100000
 
 import pandas as pd
 import re
 
+def log(msg: str):
+    print(f"[{time.strftime('%H:%M:%S')}] {msg}")
+
+def looks_like_text(s: pd.Series):
+    sample = s.dropna().astype(str).head(100)
+    return sample.str.contains(r"[A-Za-zÇç]").any()
+
 
 def load_or_create_schema(engine, schema, staging_tables):
-    # CASO 1 — schema já existe
+    # Carrega schema existente ou inicia vazio
     if SCHEMA_FILE.exists():
-        log("[SCHEMA] Usando schema_silver.json existente")
+        log("[SCHEMA] schema_silver.json encontrado. Usando e validando tabelas novas.")
         with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            schema_silver = json.load(f)
+    else:
+        log("[SCHEMA] schema_silver.json não encontrado. Criando do zero.")
+        schema_silver = {}
 
-    # CASO 2 — primeira execução → inferir
-    log("[SCHEMA] schema_silver.json não encontrado. Inferindo tipos...")
-
-    schema_silver = {}
+    updated = False
 
     for staging_table in staging_tables:
         silver_table = silver_table_name(staging_table)
-        log(f"Profiling {schema}.{staging_table} -> {schema}.{silver_table}")
+
+        # Já existe → não toca (schema congelado)
+        if silver_table in schema_silver:
+            continue
+
+        log(f"[SCHEMA] Nova tabela detectada: {schema}.{staging_table}")
+        log(f"[SCHEMA] Inferindo estrutura para {schema}.{silver_table}")
 
         df_sample = pd.read_sql(
             f'SELECT * FROM {schema}."{staging_table}" LIMIT {SAMPLE_LIMIT}',
@@ -856,23 +1044,30 @@ def load_or_create_schema(engine, schema, staging_tables):
             "columns": {
                 col.lower(): {
                     **infer_column_type_final(df_sample[col]),
-                    "source_col": col
+                    "source_col": col,
                 }
                 for col in df_sample.columns
-            }
+            },
         }
 
-    # Salva schema congelado
-    with open(SCHEMA_FILE, "w", encoding="utf-8") as f:
-        json.dump(schema_silver, f, indent=2, ensure_ascii=False)
+        updated = True
 
-    log("[SCHEMA] schema_silver.json criado e congelado")
+    # Salva somente se houve mudança
+    if updated:
+        with open(SCHEMA_FILE, "w", encoding="utf-8") as f:
+            json.dump(schema_silver, f, indent=2, ensure_ascii=False)
+        log("[SCHEMA] schema_silver.json atualizado com novas tabelas")
+    else:
+        log("[SCHEMA] Nenhuma nova tabela detectada")
+
     return schema_silver
 
-
 # Detecta formato de data
-def is_date_series(s: pd.Series):
-    sample = s.dropna().astype(str).head(50)
+def is_date_series(s: pd.Series, threshold=0.9):
+    sample = s.dropna().astype(str).head(100)
+    if sample.empty:
+        return None
+
     formats = [
         "%Y-%m-%d",
         "%Y-%m-%d %H:%M:%S",
@@ -880,13 +1075,22 @@ def is_date_series(s: pd.Series):
         "%d/%m/%Y",
         "%d/%m/%Y %H:%M:%S",
     ]
+
     for fmt in formats:
-        try:
-            pd.to_datetime(sample, format=fmt)
+        ok = 0
+        for v in sample:
+            try:
+                pd.to_datetime(v, format=fmt)
+                ok += 1
+            except:
+                pass
+
+        if ok / len(sample) >= threshold:
             return fmt
-        except:
-            continue
+
     return None
+
+
 
 # Inferência de tipo
 def infer_column_type_final(series: pd.Series) -> dict:
@@ -895,13 +1099,14 @@ def infer_column_type_final(series: pd.Series) -> dict:
         return {"type": "text"}
 
     # BOOLEAN lógico
-    if s.astype(str).isin(["0","1","true","false","True","False"]).all():
+    if s.astype(str).isin(["0", "1", "true", "false", "True", "False"]).all():
         return {"type": "boolean"}
 
-    # DATE / TIMESTAMP
-    date_fmt = is_date_series(s)
-    if date_fmt:
-        return {"type": "timestamp", "format": date_fmt}
+    # DATE / TIMESTAMP (somente se NÃO for texto)
+    if not looks_like_text(s):
+        date_fmt = is_date_series(s)
+        if date_fmt:
+            return {"type": "timestamp", "format": date_fmt}
 
     # INTEGER
     if s.astype(str).str.fullmatch(r"-?\d+").all():
@@ -913,27 +1118,33 @@ def infer_column_type_final(series: pd.Series) -> dict:
 
     return {"type": "text"}
 
+
 from sqlalchemy import text
 
 with engine.connect() as conn:
-    result = conn.execute(text("""
+    result = conn.execute(
+        text(
+            """
         SELECT table_name
         FROM information_schema.tables
         WHERE table_schema = :schema
           AND table_type = 'BASE TABLE'
           AND table_name LIKE 'staging_%'
-    """), {"schema": SCHEMA})
+    """
+        ),
+        {"schema": SCHEMA},
+    )
 
     staging_tables = [row[0] for row in result.fetchall()]
+
 
 # Função nome silver
 def silver_table_name(staging_table: str) -> str:
     return staging_table.replace("staging_", "silver_")
 
+
 schema_silver = load_or_create_schema(
-    engine=engine,
-    schema=SCHEMA,
-    staging_tables=staging_tables
+    engine=engine, schema=SCHEMA, staging_tables=staging_tables
 )
 
 
@@ -942,7 +1153,7 @@ def generate_cast_sql(col_dest, meta):
     col_src = meta["source_col"]
 
     col_sql = f'"{col_src}"'
-    col_txt = f'{col_sql}::text'
+    col_txt = f"{col_sql}::text"
 
     if meta["type"] == "boolean":
         return f"""
@@ -956,31 +1167,34 @@ def generate_cast_sql(col_dest, meta):
     if meta["type"] == "timestamp":
         fmt = meta.get("format")
 
-        pg_fmt = {
+        pg_fmt_map = {
             "%Y-%m-%d": "YYYY-MM-DD",
             "%Y-%m-%d %H:%M:%S": "YYYY-MM-DD HH24:MI:SS",
-            "%Y-%m-%dT%H:%M:%S": "YYYY-MM-DD\"T\"HH24:MI:SS",
+            "%Y-%m-%dT%H:%M:%S": 'YYYY-MM-DD"T"HH24:MI:SS',
             "%d/%m/%Y": "DD/MM/YYYY",
             "%d/%m/%Y %H:%M:%S": "DD/MM/YYYY HH24:MI:SS",
-        }.get(fmt)
+        }
+
+        pg_fmt = pg_fmt_map.get(fmt)
 
         if pg_fmt:
             return f"""
             CASE
-                WHEN {col_txt} = '' THEN NULL
-                ELSE to_timestamp({col_txt}, '{pg_fmt}')
+                WHEN {col_txt} ~ '^\\d{{4}}-\\d{{2}}-\\d{{2}}' THEN
+                    to_timestamp({col_txt}, '{pg_fmt}')
+                ELSE NULL
             END AS "{col_dest}"
             """
         else:
             return f"""
             CASE
-                WHEN {col_sql} IS NULL OR {col_txt} = '' THEN NULL
-                ELSE {col_sql}::timestamp
+                WHEN {col_txt} = '' THEN NULL
+                ELSE NULL
             END AS "{col_dest}"
             """
 
 
-    if meta["type"] in ("bigint","numeric(18,4)"):
+    if meta["type"] in ("bigint", "numeric(18,4)"):
         return f"""
         CASE
             WHEN {col_txt} ~ '^-?\\d+(\\.\\d+)?$' THEN {col_txt}::{meta["type"]}
@@ -990,15 +1204,19 @@ def generate_cast_sql(col_dest, meta):
 
     return f'{col_sql}::text AS "{col_dest}"'
 
+
 # Gera CREATE TABLE
 def generate_create_table(schema, table, columns: dict):
-    cols = ",\n  ".join(f'"{col_dest}" {meta["type"]}' for col_dest, meta in columns.items())
+    cols = ",\n  ".join(
+        f'"{col_dest}" {meta["type"]}' for col_dest, meta in columns.items()
+    )
     return f"""
     DROP TABLE IF EXISTS {schema}."{table}";
     CREATE TABLE {schema}."{table}" (
       {cols}
     );
     """
+
 
 # Cria tabelas silver
 for silver_table, meta in schema_silver.items():
@@ -1007,15 +1225,19 @@ for silver_table, meta in schema_silver.items():
     with engine.begin() as conn:
         conn.execute(text(ddl))
 
+
 # Gera INSERT
 def generate_insert_cast(staging_schema, SCHEMA, staging_table, silver_table, columns):
-    selects = ",\n".join(generate_cast_sql(col_dest, meta) for col_dest, meta in columns.items())
+    selects = ",\n".join(
+        generate_cast_sql(col_dest, meta) for col_dest, meta in columns.items()
+    )
     return f"""
     INSERT INTO {SCHEMA}."{silver_table}"
     SELECT
       {selects}
     FROM {staging_schema}."{staging_table}";
     """
+
 
 # Carrega dados
 for silver_table, meta in schema_silver.items():
@@ -1034,7 +1256,8 @@ log("--------------------------------------------------")
 log("PROCESSO FINALIZADO")
 
 # %% [markdown]
-#   ## Gold - Adicionando novas colunas e agregando valor
+# ## Gold - Adicionando novas colunas e agregando valor
+# 
 
 # %%
 from sqlalchemy import create_engine, text
@@ -1127,13 +1350,275 @@ with engine.begin() as conn:
     conn.execute(text(sql))
 
 # %% [markdown]
-#   ## Dim_Calendario
+# ## Views
+# 
+
+# %%
+# Criar view de estoque
+from sqlalchemy import create_engine, text
+
+engine = create_engine(DB_URL)
+
+sql = """
+CREATE OR REPLACE VIEW useall.vw_ultimos_custos AS
+
+SELECT
+    *
+FROM (
+    SELECT
+        gc.*,
+        ROW_NUMBER() OVER (
+            PARTITION BY codigoitem
+            ORDER BY datacusto DESC
+        ) AS rn
+    FROM useall.gold_custos gc
+    WHERE ultimocusto <> 0
+) t
+WHERE rn = 1;
+"""
+with engine.begin() as conn:
+    conn.execute(text(sql))
+
+# %%
+# Criar view de estoque
+from sqlalchemy import create_engine, text
+
+engine = create_engine(DB_URL)
+
+sql = """
+CREATE OR REPLACE VIEW useall.vw_gold_estoque AS
+SELECT
+    e.*,
+    c.ultimocusto,
+
+    /* =========================
+       STATUS DO ESTOQUE
+       ========================= */
+    CASE
+        WHEN e.estoquemin IS NOT NULL
+             AND e.estoquemax IS NOT NULL
+             AND e.estoquemin > e.estoquemax
+        THEN 'PARAMETRO_INVALIDO'
+
+        WHEN e.saldodisponivel < 0
+        THEN 'INCONSISTENTE'
+
+        WHEN e.estoquemin IS NULL OR e.estoquemin = 0
+        THEN 'SEM_MINIMO'
+
+        WHEN e.estoquemin > 0
+             AND e.saldodisponivel = 0
+        THEN 'RUPTURA'
+
+        WHEN e.estoquemin > 0
+             AND e.saldodisponivel > 0
+             AND e.saldodisponivel < e.estoquemin
+        THEN 'CRITICO'
+
+        WHEN e.estoquemax IS NOT NULL
+             AND e.saldodisponivel > e.estoquemax
+        THEN 'EXCESSO'
+
+        WHEN e.saldodisponivel >= e.estoquemin
+             AND (e.estoquemax IS NULL OR e.saldodisponivel <= e.estoquemax)
+        THEN 'ADEQUADO'
+
+        ELSE 'NAO_CLASSIFICADO'
+    END AS py_status_estoque,
+
+    /* =========================
+       IMPACTO FINANCEIRO
+       + = reposição
+       - = excesso
+       ========================= */
+    CASE
+        -- erro de parâmetro → neutraliza
+        WHEN e.estoquemin IS NOT NULL
+             AND e.estoquemax IS NOT NULL
+             AND e.estoquemin > e.estoquemax
+        THEN 0
+
+        -- sem mínimo → neutro
+        WHEN e.estoquemin IS NULL OR e.estoquemin = 0
+        THEN 0
+
+        -- reposição necessária
+        WHEN e.saldodisponivel < e.estoquemin
+        THEN (e.estoquemin - GREATEST(e.saldodisponivel, 0)) * c.ultimocusto
+
+        -- excesso de estoque (valor negativo)
+        WHEN e.estoquemax IS NOT NULL
+             AND e.saldodisponivel > e.estoquemax
+        THEN -1 * (e.saldodisponivel - e.estoquemax) * c.ultimocusto
+
+        ELSE 0
+    END AS valor_impacto_estoque
+
+FROM useall.gold_estoque e
+LEFT JOIN useall.vw_ultimos_custos c
+       ON c.codigoitem = e.iditem;
+"""
+
+with engine.begin() as conn:
+    conn.execute(text(sql))
+
+# %%
+# Criar view de estoque
+from sqlalchemy import create_engine, text
+
+engine = create_engine(DB_URL)
+
+sql = """
+CREATE OR REPLACE VIEW useall.vw_gold_filiais_uf AS
+
+SELECT 
+    idfilial,
+    datahoraalt,
+    idempresa,
+    matriz,
+    apelido,
+    CASE 
+        -- Rio Grande do Sul
+        WHEN idfilial IN (393, 336, 337, 558, 387) THEN 'RS'
+        
+        -- Bahia
+        WHEN idfilial = 520 THEN 'BA'
+        
+        -- Distrito Federal
+        WHEN idfilial = 404 THEN 'DF'
+        
+        -- Santa Catarina (Mapeamento explícito dos IDs atuais)
+        WHEN idfilial IN (342, 343, 381, 389, 334, 335, 339, 333, 341, 578, 390, 379, 344, 345, 346, 338) THEN 'SC'
+        
+        -- Caso surja um ID novo que não foi tratado acima
+        ELSE '*NOVA'
+    END AS uf
+FROM useall.gold_filiais;
+
+"""
+with engine.begin() as conn:
+    conn.execute(text(sql))
+
+# %%
+# Criar view de requisicoes
+from sqlalchemy import create_engine, text
+
+engine = create_engine(DB_URL)
+
+sql = """
+CREATE OR REPLACE VIEW useall.vw_gold_requisicoes_status AS
+
+SELECT
+    r.*,
+
+    /* STATUS DO ITEM */
+    CASE
+        WHEN r.quantcancel = r.quant THEN 'CANCELADO TOTAL'
+        WHEN r.quantsubst = r.quant THEN 'SUBSTITUIDO TOTAL'
+        WHEN r.quantatend = 0 AND r.saldo > 0 THEN 'NÃO ATENDIDA'
+        WHEN r.quantatend = r.quant THEN 'ATENDIDO'
+        WHEN r.quantatend > r.quant THEN 'ATENDIDO A MAIS'
+        WHEN r.quantatend < r.quant AND r.quantatend > 0 THEN 'ATENDIDA PARCIAL'
+        ELSE 'INDEFINIDO'
+    END AS py_status_item,
+
+    /* GERA ATENDIMENTO */
+    CASE
+        WHEN r.quantatend > 0 THEN 'SIM'
+        ELSE 'NÃO'
+    END AS py_gera_atend,
+
+    /* ID COMPOSTO */
+    r.idreqmat::text || '-' || r.iditem::text AS py_idreqitem,
+
+    /* MAIOR DATA DE ATENDIMENTO */
+    COALESCE(
+        ati.max_dataatend_item,
+        atr.max_dataatend_req
+    ) AS py_data_ult_atend
+
+FROM useall.gold_requisicoes r
+
+/* ATENDIMENTO POR ITEM */
+LEFT JOIN (
+    SELECT
+        py_idreqitem,
+        MAX(data_atend) AS max_dataatend_item
+    FROM useall.vw_gold_atendimentos_id
+    GROUP BY py_idreqitem
+) ati
+    ON ati.py_idreqitem = (r.idreqmat::text || '-' || r.iditem::text)
+
+/* ATENDIMENTO POR REQUISIÇÃO (fallback) */
+LEFT JOIN (
+    SELECT
+        idreqmat,
+        MAX(data_atend) AS max_dataatend_req
+    FROM useall.vw_gold_atendimentos_id
+    GROUP BY idreqmat
+) atr
+    ON atr.idreqmat = r.idreqmat;
+
+"""
+
+with engine.begin() as conn:
+    conn.execute(text(sql))
+
+# %%
+# Criar view de requisicoes
+from sqlalchemy import create_engine, text
+
+engine = create_engine(DB_URL)
+
+sql = """
+CREATE OR REPLACE VIEW useall.vw_gold_atendimentos_id AS
+SELECT
+    a.*,
+
+    /* ID REQUISIÇÃO + ITEM */
+    a.idreqmat::text || '-' || a.iditem::text AS py_idreqitem,
+
+    /* ID ITEM + DATA */
+    a.iditem::text || '-' || TO_CHAR(a.data_atend::date, 'YYYYMMDD') AS py_iddataitem
+
+FROM useall.gold_atendimentodereq a;
+"""
+
+with engine.begin() as conn:
+    conn.execute(text(sql))
+
+# %%
+# Criar view de requisicoes
+from sqlalchemy import create_engine, text
+
+engine = create_engine(DB_URL)
+
+sql = """
+CREATE OR REPLACE VIEW useall.vw_gold_estoque_dia_matriz_id AS
+SELECT
+    *,
+    CONCAT(
+        iditem,
+        '-',
+        TO_CHAR(data_referencia::date, 'YYYYMMDD')
+    ) AS py_iddataitem
+FROM useall.gold_estoque_diario
+WHERE desc_almox = 'MERC. MATRIZ';
+"""
+
+with engine.begin() as conn:
+    conn.execute(text(sql))
+
+# %% [markdown]
+# ## Dim_Calendario
+# 
 
 # %%
 from sqlalchemy import create_engine, text
 
 # ---------------- SQL ----------------
-sql_create_dim_calendario = text("""
+sql_create_dim_calendario = text(
+    """
 CREATE TABLE IF NOT EXISTS useall.dim_calendario (
     data DATE PRIMARY KEY,
 
@@ -1161,17 +1646,21 @@ CREATE TABLE IF NOT EXISTS useall.dim_calendario (
     is_feriado BOOLEAN,
     nome_feriado TEXT
 );
-""")
+"""
+)
 
-sql_create_indices = text("""
+sql_create_indices = text(
+    """
 CREATE INDEX IF NOT EXISTS idx_dim_calendario_data
     ON useall.dim_calendario (data);
 
 CREATE INDEX IF NOT EXISTS idx_dim_calendario_ano_mes_ordem
     ON useall.dim_calendario (ano_mes_ordem);
-""")
+"""
+)
 
-sql_atualiza_calendario = text("""
+sql_atualiza_calendario = text(
+    """
 INSERT INTO useall.dim_calendario (
     data,
     ano,
@@ -1277,48 +1766,13 @@ FROM (
     WHERE data IS NOT NULL
 ) x
 ON CONFLICT (data) DO NOTHING;
-""")
+"""
+)
 
 # ---------------- EXECUÇÃO ----------------
 with engine.begin() as conn:
     conn.execute(sql_create_dim_calendario)
     conn.execute(sql_create_indices)
     conn.execute(sql_atualiza_calendario)
-
-# %%
-import os
-from pathlib import Path
-from sqlalchemy import text
-
-# 1. Definir a raiz do projeto relativa a este arquivo script
-# Path(__file__).parent pega a pasta onde o seu script .py está
-BASE_DIR = Path(__file__).resolve().parent
-
-# 2. Montar o caminho relativo para o SQL
-# Isso vai funcionar em Windows (\\) e Linux (/) automaticamente
-sql_file_path = BASE_DIR / "sql" / "view" / "vw_gold_filiais_uf.sql"
-
-def rodar_script_sql(engine, caminho):
-    # Verificar se o arquivo realmente existe no caminho relativo
-    if not caminho.exists():
-        print(f"❌ Erro: Arquivo não encontrado!")
-        print(f"   Buscado em: {caminho}")
-        print(f"   Diretório atual de execução: {os.getcwd()}")
-        return
-
-    try:
-        # Lendo o conteúdo do SQL
-        query = caminho.read_text(encoding='utf-8')
-
-        # Executando no banco
-        with engine.begin() as conn:
-            conn.execute(text(query))
-            print(f"✅ View processada com sucesso via caminho relativo!")
-            
-    except Exception as e:
-        print(f"⚠️ Erro na execução: {e}")
-
-# Chamar a função
-rodar_script_sql(engine, sql_file_path)
 
 
